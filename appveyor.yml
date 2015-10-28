@@ -1,0 +1,8 @@
+---
+version: 1.0.{build}
+branches:
+  except:
+    - gh-pages
+build:
+  project: RVO.sln
+  verbosity: minimal
