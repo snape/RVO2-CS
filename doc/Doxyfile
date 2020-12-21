@@ -1,12 +1,12 @@
-# Doxyfile 1.8.11
+# Doxyfile 1.8.13
 
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = "RVO2 Library C#"
-PROJECT_NUMBER         = 2.0.1
-PROJECT_BRIEF          = "Optimal Reciprocal Collision Avoidance"
+PROJECT_NUMBER         = 2.1.0
+PROJECT_BRIEF          = "Optimal Reciprocal Collision Avoidance for C#"
 PROJECT_LOGO           =
 OUTPUT_DIRECTORY       =
 CREATE_SUBDIRS         = NO
@@ -35,6 +35,7 @@ OPTIMIZE_FOR_FORTRAN   = NO
 OPTIMIZE_OUTPUT_VHDL   = NO
 EXTENSION_MAPPING      =
 MARKDOWN_SUPPORT       = YES
+TOC_INCLUDE_HEADINGS   = 0
 AUTOLINK_SUPPORT       = YES
 BUILTIN_STL_SUPPORT    = NO
 CPP_CLI_SUPPORT        = NO
@@ -62,7 +63,7 @@ HIDE_UNDOC_CLASSES     = NO
 HIDE_FRIEND_COMPOUNDS  = NO
 HIDE_IN_BODY_DOCS      = NO
 INTERNAL_DOCS          = NO
-CASE_SENSE_NAMES       = NO
+CASE_SENSE_NAMES       = YES
 HIDE_SCOPE_NAMES       = NO
 HIDE_COMPOUND_REFERENCE= NO
 SHOW_INCLUDE_FILES     = YES
@@ -70,8 +71,8 @@ SHOW_GROUPED_MEMB_INC  = NO
 FORCE_LOCAL_INCLUDES   = NO
 INLINE_INFO            = YES
 SORT_MEMBER_DOCS       = YES
-SORT_BRIEF_DOCS        = YES
-SORT_MEMBERS_CTORS_1ST = YES
+SORT_BRIEF_DOCS        = NO
+SORT_MEMBERS_CTORS_1ST = NO
 SORT_GROUP_NAMES       = NO
 SORT_BY_SCOPE_NAME     = NO
 STRICT_PROTO_MATCHING  = NO
@@ -101,20 +102,20 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = ../src
+INPUT                  = ../src/Line.cs \
+                         ../src/RVOMath.cs \
+                         ../src/Simulator.cs \
+                         ../src/Vector2.cs
 INPUT_ENCODING         = UTF-8
-FILE_PATTERNS          = Line.cs \
-                         RVOMath.cs \
-                         Simulator.cs \
-                         Vector2.cs
+FILE_PATTERNS          =
 RECURSIVE              = NO
 EXCLUDE                =
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        =
-EXAMPLE_PATH           = ../examples
-EXAMPLE_PATTERNS       = Blocks.cs \
-                         Circle.cs
+EXAMPLE_PATH           = ../examples/Blocks.cs \
+                         ../examples/Circle.cs
+EXAMPLE_PATTERNS       =
 EXAMPLE_RECURSIVE      = NO
 IMAGE_PATH             =
 INPUT_FILTER           =
@@ -150,8 +151,8 @@ HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
 HTML_HEADER            = header.html
 HTML_FOOTER            = footer.html
-HTML_STYLESHEET        =
-HTML_EXTRA_STYLESHEET  = stylesheet.css
+HTML_STYLESHEET        = stylesheet.css
+HTML_EXTRA_STYLESHEET  =
 HTML_EXTRA_FILES       =
 HTML_COLORSTYLE_HUE    = 220
 HTML_COLORSTYLE_SAT    = 100
@@ -160,9 +161,9 @@ HTML_TIMESTAMP         = NO
 HTML_DYNAMIC_SECTIONS  = NO
 HTML_INDEX_NUM_ENTRIES = 100
 GENERATE_DOCSET        = NO
-DOCSET_FEEDNAME        = "RVO2 Library C#"
-DOCSET_BUNDLE_ID       = edu.unc.cs.gamma.rvo2
-DOCSET_PUBLISHER_ID    = edu.unc.cs.gamma.documentation
+DOCSET_FEEDNAME        = "Doxygen generated docs"
+DOCSET_BUNDLE_ID       = org.doxygen.Project
+DOCSET_PUBLISHER_ID    = org.doxygen.Publisher
 DOCSET_PUBLISHER_NAME  = Publisher
 GENERATE_HTMLHELP      = NO
 CHM_FILE               =
@@ -173,14 +174,14 @@ BINARY_TOC             = NO
 TOC_EXPAND             = NO
 GENERATE_QHP           = NO
 QCH_FILE               =
-QHP_NAMESPACE          = edu.unc.cs.gamma.rvo2
+QHP_NAMESPACE          = org.doxygen.Project
 QHP_VIRTUAL_FOLDER     = doc
 QHP_CUST_FILTER_NAME   =
 QHP_CUST_FILTER_ATTRS  =
 QHP_SECT_FILTER_ATTRS  =
 QHG_LOCATION           =
 GENERATE_ECLIPSEHELP   = NO
-ECLIPSE_DOC_ID         = edu.unc.cs.gamma.rvo2
+ECLIPSE_DOC_ID         = org.doxygen.Project
 DISABLE_INDEX          = NO
 GENERATE_TREEVIEW      = NO
 ENUM_VALUES_PER_LINE   = 4
@@ -314,6 +315,7 @@ DOTFILE_DIRS           =
 MSCFILE_DIRS           =
 DIAFILE_DIRS           =
 PLANTUML_JAR_PATH      =
+PLANTUML_CFG_FILE      =
 PLANTUML_INCLUDE_PATH  =
 DOT_GRAPH_MAX_NODES    = 50
 MAX_DOT_GRAPH_DEPTH    = 0

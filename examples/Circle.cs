@@ -36,7 +36,7 @@
  * circle.
  */
 
-#define RVO_OUTPUT_TIME_AND_POSITIONS
+#define RVOCS_OUTPUT_TIME_AND_POSITIONS
 
 using System;
 using System.Collections.Generic;
@@ -77,7 +77,7 @@ namespace RVO
             }
         }
 
-        #if RVO_OUTPUT_TIME_AND_POSITIONS
+        #if RVOCS_OUTPUT_TIME_AND_POSITIONS
         void updateVisualization()
         {
             /* Output the current global time. */
@@ -136,7 +136,7 @@ namespace RVO
             /* Perform (and manipulate) the simulation. */
             do
             {
-                #if RVO_OUTPUT_TIME_AND_POSITIONS
+                #if RVOCS_OUTPUT_TIME_AND_POSITIONS
                 circle.updateVisualization();
                 #endif
                 circle.setPreferredVelocities();

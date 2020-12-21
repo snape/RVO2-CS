@@ -1,3 +1,6 @@
+# -*- mode: cmake -*-
+# vi: set ft=cmake :
+
 #
 # examples/CMakeLists.txt
 # RVO2 Library C#
@@ -8,7 +11,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,9 +30,13 @@
 # Chapel Hill, N.C. 27599-3175
 # United States of America
 #
-# <http://gamma.cs.unc.edu/RVO2/>
+# <https://gamma.cs.unc.edu/RVO2/>
 #
 
-include_external_msproject(Blocks Blocks.csproj GUID C7FD7591-D41C-4D59-9C58-A78AFCD6B46C RVO)
-include_external_msproject(Circle Circle.csproj GUID 50D23289-DD51-481C-A3E1-49BADC6F414B RVO)
+if(BUILD_TESTING)
+  include_external_msproject(Blocks Blocks.csproj
+    GUID C7FD7591-D41C-4D59-9C58-A78AFCD6B46C RVOCS)
 
+  include_external_msproject(Circle Circle.csproj
+    GUID 50D23289-DD51-481C-A3E1-49BADC6F414B RVOCS)
+endif()

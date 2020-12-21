@@ -1,44 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C7FD7591-D41C-4D59-9C58-A78AFCD6B46C}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Blocks</RootNamespace>
-    <AssemblyName>Blocks</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <ReleaseVersion>2.0</ReleaseVersion>
+    <TargetFramework>net5.0</TargetFramework>
+    <ReleaseVersion>2.1.0</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
+    <DefineConstants>TRACE;DEBUG;NET;NET5_0;NETCOREAPP</DefineConstants>
     <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
+    <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType></DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
+    <DefineConstants>TRACE;RELEASE;NET;NET5_0;NETCOREAPP</DefineConstants>
     <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
+    <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
+    <ProjectReference Include="..\src\RVOCS.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Blocks.cs" />
+    <Compile Remove="Circle.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\src\RVO.csproj">
-      <Project>{9F596498-0857-40AA-A765-6DD3A75B415E}</Project>
-      <Name>RVO</Name>
-    </ProjectReference>
+    <None Remove="CMakeLists.txt" />
   </ItemGroup>
 </Project>

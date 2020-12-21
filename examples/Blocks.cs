@@ -37,8 +37,8 @@
  * obstacles. There is no roadmap to guide the agents around the obstacles.
  */
 
-#define RVO_OUTPUT_TIME_AND_POSITIONS
-#define RVO_SEED_RANDOM_NUMBER_GENERATOR
+#define RVOCS_OUTPUT_TIME_AND_POSITIONS
+#define RVOCS_SEED_RANDOM_NUMBER_GENERATOR
 
 using System;
 using System.Collections.Generic;
@@ -57,7 +57,7 @@ namespace RVO
         {
             goals = new List<Vector2>();
 
-            #if RVO_SEED_RANDOM_NUMBER_GENERATOR
+            #if RVOCS_SEED_RANDOM_NUMBER_GENERATOR
             random = new Random();
             #else
             random = new Random(0);
@@ -136,7 +136,7 @@ namespace RVO
             Simulator.Instance.processObstacles();
         }
 
-        #if RVO_OUTPUT_TIME_AND_POSITIONS
+        #if RVOCS_OUTPUT_TIME_AND_POSITIONS
         void updateVisualization()
         {
             /* Output the current global time. */
@@ -202,7 +202,7 @@ namespace RVO
             /* Perform (and manipulate) the simulation. */
             do
             {
-                #if RVO_OUTPUT_TIME_AND_POSITIONS
+                #if RVOCS_OUTPUT_TIME_AND_POSITIONS
                 blocks.updateVisualization();
                 #endif
                 blocks.setPreferredVelocities();

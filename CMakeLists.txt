@@ -1,3 +1,6 @@
+# -*- mode: cmake -*-
+# vi: set ft=cmake :
+
 #
 # CMakeLists.txt
 # RVO2 Library C#
@@ -8,7 +11,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,11 +30,14 @@
 # Chapel Hill, N.C. 27599-3175
 # United States of America
 #
-# <http://gamma.cs.unc.edu/RVO2/>
+# <https://gamma.cs.unc.edu/RVO2/>
 #
 
-cmake_minimum_required(VERSION 2.8)
-project(RVO NONE)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+project(RVOCS
+  VERSION 2.1.0
+  DESCRIPTION "Optimal Reciprocal Collision Avoidance for C#"
+  LANGUAGES NONE)
 
 include(CTest)
 

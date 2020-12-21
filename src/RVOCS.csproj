@@ -1,8 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <ReleaseVersion>2.1.0</ReleaseVersion>
+    <PackageId>RVOCS</PackageId>
+    <PackageVersion>2.1.0</PackageVersion>
+    <Authors>Jur van den Berg, Stephen J. Guy, Jamie Snape, Ming C. Lin, Dinesh Manocha</Authors>
+    <Description>Optimal Reciprocal Collision Avoidance for C#</Description>
+    <Title>RVO2 Library C#</Title>
+    <Copyright>2008 University of North Carolina at Chapel Hill</Copyright>
+    <PackageLicense>Apache-2.0</PackageLicense>
+    <PackageProjectUrl>https://gamma.cs.unc.edu/RVO2/</PackageProjectUrl>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,12 +28,6 @@
     <WarningLevel>4</WarningLevel>
     <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\src\RVOCS.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Blocks.cs" />
-  </ItemGroup>
   <ItemGroup>
     <None Remove="CMakeLists.txt" />
   </ItemGroup>
