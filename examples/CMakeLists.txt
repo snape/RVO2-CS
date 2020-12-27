@@ -34,9 +34,11 @@
 #
 
 if(BUILD_TESTING)
+  # cmake-lint: disable=E1120
   include_external_msproject(Blocks Blocks.csproj
     GUID C7FD7591-D41C-4D59-9C58-A78AFCD6B46C RVOCS)
 
+  # cmake-lint: disable=E1120
   include_external_msproject(Circle Circle.csproj
     GUID 50D23289-DD51-481C-A3E1-49BADC6F414B RVOCS)
 endif()

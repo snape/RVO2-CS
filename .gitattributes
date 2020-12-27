@@ -19,4 +19,7 @@ CMakeLists.txt  text whitespace-2
 Doxyfile        text whitespace-2
 LICENSE         text whitespace=trailing-space
 
+.gitattributes  export-ignore
+.gitignore      export-ignore
+
 .github/**      export-ignore
