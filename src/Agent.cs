@@ -153,7 +153,7 @@ namespace RVO
 
                     continue;
                 }
-                else if (s >= 0.0f && s < 1.0f && distSqLine <= radiusSq)
+                else if (s >= 0.0f && s <= 1.0f && distSqLine <= radiusSq)
                 {
                     /* Collision with obstacle segment. */
                     line.point = new Vector2(0.0f, 0.0f);
