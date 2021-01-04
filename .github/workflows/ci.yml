@@ -14,6 +14,44 @@ on:
     - cron: '0 5 * * *'
 
 jobs:
+  centos:
+    name: centos latest
+    runs-on: ubuntu-latest
+    container: centos:latest
+    steps:
+      - name: pre-checkout setup
+        run: |
+          dnf install -q -y \
+            ca-certificates \
+            glibc-langpack-en \
+            git
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: post-checkout setup dnf
+        run: |
+          dnf install -q -y \
+            curl \
+            libicu \
+            lttng-ust \
+            zlib
+        shell: bash
+      - name: post-checkout setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+      - name: build package debug
+        run: |
+          export DOTNET_CLI_TELEMETRY_OPTOUT=1
+          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
+        shell: bash
+      - name: build package release
+        run: |
+          export DOTNET_CLI_TELEMETRY_OPTOUT=1
+          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
+
   macos:
     name:  macos latest
     runs-on: macos-latest
@@ -40,10 +78,28 @@ jobs:
   ubuntu:
     name: ubuntu latest
     runs-on: ubuntu-latest
+    container: ubuntu:latest
     steps:
+      - name: pre-checkout setup
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update -qq
+          apt-get install -o Dpkg::Use-Pty=0 -qq --no-install-recommends \
+            ca-certificates \
+            git
+        shell: bash
       - name: checkout
         uses: actions/checkout@v2
-      - name: setup
+      - name: post-checkout setup apt
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update -qq
+          apt-get install -o Dpkg::Use-Pty=0 -qq --no-install-recommends \
+            curl \
+            libicu66 \
+            liblttng-ust0 \
+            zlib1g
+      - name: post-checkout setup dotnet
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
