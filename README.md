@@ -21,7 +21,7 @@ specifies static obstacles, agents, and the preferred velocities of the agents.
 The simulation is performed step-by-step via a simple call to the library. The
 simulation is fully accessible and manipulable during runtime.
 
-![Build Status](https://github.com/snape/RVO2-CS/workflows/ci/badge.svg?branch=master)
+![Build Status](https://github.com/snape/RVO2-CS/workflows/ci/badge.svg?branch=main)
 
 Copyright 2008 University of North Carolina at Chapel Hill
 
