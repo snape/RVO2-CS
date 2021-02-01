@@ -14,27 +14,72 @@ on:
     - cron: '0 5 * * *'
 
 jobs:
-  centos:
-    name: centos latest
+  alpine:
+    name: alpine latest
     runs-on: ubuntu-latest
-    container: centos:latest
+    container: alpine:latest
     steps:
       - name: pre-checkout setup
         run: |
-          dnf install -q -y \
+          apk add --no-cache \
             ca-certificates \
-            glibc-langpack-en \
             git
+        shell: sh
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: post-checkout setup apk
+        run: |
+          apk add --no-cache \
+            bash \
+            curl \
+            icu \
+            lttng-ust \
+            zlib
+        shell: sh
+      - name: post-checkout setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+      - name: build package debug
+        run: |
+          export DOTNET_CLI_TELEMETRY_OPTOUT=1
+          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
+        shell: sh
+      - name: build package release
+        run: |
+          export DOTNET_CLI_TELEMETRY_OPTOUT=1
+          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
+        shell: sh
+
+  arch:
+    name: arch latest
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: pre-checkout setup
+        run: |
+          pacman --noconfirm -S -u -y
+          pacman --noconfirm -S \
+            ca-certificates \
+            git
+          rm -rf \
+            /var/cache/pacman/pkg/* \
+            /var/lib/pacman/sync/*
         shell: bash
       - name: checkout
         uses: actions/checkout@v2
-      - name: post-checkout setup dnf
+      - name: post-checkout setup pacman
         run: |
-          dnf install -q -y \
+          pacman --noconfirm -S -y \
             curl \
-            libicu \
+            icu \
             lttng-ust \
             zlib
+          rm -rf \
+            /var/cache/pacman/pkg/* \
+            /var/lib/pacman/sync/*
         shell: bash
       - name: post-checkout setup dotnet
         uses: actions/setup-dotnet@v1
@@ -51,9 +96,51 @@ jobs:
           export DOTNET_CLI_TELEMETRY_OPTOUT=1
           dotnet build --configuration Release --nologo RVOCS.sln
           dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
+        shell: bash
+
+  centos:
+    name: centos latest
+    runs-on: ubuntu-latest
+    container: centos:latest
+    steps:
+      - name: pre-checkout setup
+        run: |
+          dnf install -q -y \
+            ca-certificates \
+            glibc-langpack-en \
+            git
+          rm -rf /var/cache/yum
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: post-checkout setup dnf
+        run: |
+          dnf install -q -y \
+            curl \
+            libicu \
+            lttng-ust \
+            zlib
+          rm -rf /var/cache/yum
+        shell: bash
+      - name: post-checkout setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+      - name: build package debug
+        run: |
+          export DOTNET_CLI_TELEMETRY_OPTOUT=1
+          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
+        shell: bash
+      - name: build package release
+        run: |
+          export DOTNET_CLI_TELEMETRY_OPTOUT=1
+          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
+        shell: bash
 
   macos:
-    name:  macos latest
+    name: macos latest
     runs-on: macos-latest
     steps:
       - name: checkout
@@ -87,6 +174,7 @@ jobs:
           apt-get install -o Dpkg::Use-Pty=0 -qq --no-install-recommends \
             ca-certificates \
             git
+          rm -rf /var/lib/apt/lists/*
         shell: bash
       - name: checkout
         uses: actions/checkout@v2
@@ -99,6 +187,7 @@ jobs:
             libicu66 \
             liblttng-ust0 \
             zlib1g
+          rm -rf /var/lib/apt/lists/*
       - name: post-checkout setup dotnet
         uses: actions/setup-dotnet@v1
         with:
