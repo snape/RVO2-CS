@@ -1,6 +1,7 @@
 ---
 name: ci
-on:
+
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - main
@@ -13,67 +14,54 @@ on:
   schedule:
     - cron: '0 5 * * *'
 
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
 jobs:
   alpine:
     name: alpine latest
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container: alpine:latest
     steps:
       - name: pre-checkout setup
         run: |
           apk add --no-cache \
-            ca-certificates \
-            git
-        shell: sh
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: post-checkout setup apk
-        run: |
-          apk add --no-cache \
             bash \
+            ca-certificates \
             curl \
+            git \
             icu \
             lttng-ust \
             zlib
         shell: sh
-      - name: post-checkout setup dotnet
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: post-checkout setup
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
       - name: build package debug
         run: |
-          export DOTNET_CLI_TELEMETRY_OPTOUT=1
           dotnet build --configuration Debug --nologo RVOCS.sln
           dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
         shell: sh
       - name: build package release
         run: |
-          export DOTNET_CLI_TELEMETRY_OPTOUT=1
           dotnet build --configuration Release --nologo RVOCS.sln
           dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
         shell: sh
 
   arch:
     name: arch latest
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container: archlinux:latest
     steps:
       - name: pre-checkout setup
         run: |
-          pacman --noconfirm -S -u -y
-          pacman --noconfirm -S \
+          pacman --needed --noconfirm --noprogressbar -S -u -y \
             ca-certificates \
-            git
-          rm -rf \
-            /var/cache/pacman/pkg/* \
-            /var/lib/pacman/sync/*
-        shell: bash
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: post-checkout setup pacman
-        run: |
-          pacman --noconfirm -S -y \
             curl \
+            git \
             icu \
             lttng-ust \
             zlib
@@ -81,60 +69,53 @@ jobs:
             /var/cache/pacman/pkg/* \
             /var/lib/pacman/sync/*
         shell: bash
-      - name: post-checkout setup dotnet
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: post-checkout setup
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
       - name: build package debug
         run: |
-          export DOTNET_CLI_TELEMETRY_OPTOUT=1
           dotnet build --configuration Debug --nologo RVOCS.sln
           dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
         shell: bash
       - name: build package release
         run: |
-          export DOTNET_CLI_TELEMETRY_OPTOUT=1
           dotnet build --configuration Release --nologo RVOCS.sln
           dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
         shell: bash
 
   centos:
     name: centos latest
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container: centos:latest
     steps:
       - name: pre-checkout setup
         run: |
           dnf install -q -y \
             ca-certificates \
-            glibc-langpack-en \
-            git
-          rm -rf /var/cache/yum
-        shell: bash
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: post-checkout setup dnf
-        run: |
-          dnf install -q -y \
             curl \
+            git \
+            glibc-langpack-en \
             libicu \
             lttng-ust \
             zlib
           rm -rf /var/cache/yum
         shell: bash
-      - name: post-checkout setup dotnet
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: post-checkout setup
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
       - name: build package debug
         run: |
-          export DOTNET_CLI_TELEMETRY_OPTOUT=1
           dotnet build --configuration Debug --nologo RVOCS.sln
           dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
         shell: bash
       - name: build package release
         run: |
-          export DOTNET_CLI_TELEMETRY_OPTOUT=1
           dotnet build --configuration Release --nologo RVOCS.sln
           dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
         shell: bash
@@ -151,44 +132,37 @@ jobs:
           dotnet-version: '5.0.x'
       - name: build package debug
         run: |
-          export DOTNET_CLI_TELEMETRY_OPTOUT=1
           dotnet build --configuration Debug --nologo RVOCS.sln
           dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
         shell: zsh -efuo pipefail {0}
       - name: build and pack release
         run: |
-          export DOTNET_CLI_TELEMETRY_OPTOUT=1
           dotnet build --configuration Release --nologo RVOCS.sln
           dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
         shell: zsh -efuo pipefail {0}
 
   ubuntu:
     name: ubuntu latest
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container: ubuntu:latest
     steps:
       - name: pre-checkout setup
         run: |
-          export DEBIAN_FRONTEND=noninteractive
-          apt-get update -qq
-          apt-get install -o Dpkg::Use-Pty=0 -qq --no-install-recommends \
+          apt-get -qq update
+          apt-get -qq -o Dpkg::Use-Pty=0 --no-install-recommends install \
             ca-certificates \
-            git
-          rm -rf /var/lib/apt/lists/*
-        shell: bash
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: post-checkout setup apt
-        run: |
-          export DEBIAN_FRONTEND=noninteractive
-          apt-get update -qq
-          apt-get install -o Dpkg::Use-Pty=0 -qq --no-install-recommends \
             curl \
+            git \
             libicu66 \
             liblttng-ust0 \
             zlib1g
           rm -rf /var/lib/apt/lists/*
-      - name: post-checkout setup dotnet
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: post-checkout setup
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
@@ -197,21 +171,19 @@ jobs:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: build package debug
         run: |
-          export DOTNET_CLI_TELEMETRY_OPTOUT=1
           dotnet build --configuration Debug --nologo RVOCS.sln
           dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
         shell: bash
       - name: build package release
         run: |
-          export DOTNET_CLI_TELEMETRY_OPTOUT=1
           dotnet build --configuration Release --nologo RVOCS.sln
           dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
+        shell: bash
       - name: push
         run: |
-          export DOTNET_CLI_TELEMETRY_OPTOUT=1
           dotnet nuget push --no-symbols true --skip-duplicate src/bin/Release/RVOCS.*.nupkg
-        if: ${{ github.event.release.published }}
         shell: bash
+        if: ${{ github.event.release.published }}
 
   windows:
     name: windows latest
@@ -225,13 +197,11 @@ jobs:
           dotnet-version: '5.0.x'
       - name: build package debug
         run: |
-          $Env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
           dotnet build --configuration Debug RVOCS.sln
           dotnet pack --configuration Debug --no-build src\RVOCS.csproj
-        shell: powershell
+        shell: pwsh
       - name: build and pack release
         run: |
-          $Env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
           dotnet build --configuration Release RVOCS.sln
           dotnet pack --configuration Release --no-build src\RVOCS.csproj
-        shell: powershell
+        shell: pwsh
