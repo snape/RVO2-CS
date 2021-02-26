@@ -1,3 +1,6 @@
+# -*- mode: gitignore; -*-
+# vi: set ft=gitignore:
+
 .vs/
 bin/
 html/
