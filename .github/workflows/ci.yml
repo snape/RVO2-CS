@@ -51,40 +51,40 @@ jobs:
           dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
         shell: sh
 
-#  arch:
-#    name: arch latest
-#    runs-on: ubuntu-20.04
-#    container: archlinux:latest
-#    steps:
-#      - name: pre-checkout setup
-#        run: |
-#          pacman --needed --noconfirm --noprogressbar -S -u -y \
-#            ca-certificates \
-#            curl \
-#            git \
-#            icu \
-#            lttng-ust \
-#            zlib
-#          rm -rf \
-#            /var/cache/pacman/pkg/* \
-#            /var/lib/pacman/sync/*
-#        shell: bash
-#      - name: checkout
-#        uses: actions/checkout@v2
-#      - name: post-checkout setup
-#        uses: actions/setup-dotnet@v1
-#        with:
-#          dotnet-version: '5.0.x'
-#      - name: build package debug
-#        run: |
-#          dotnet build --configuration Debug --nologo RVOCS.sln
-#          dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
-#        shell: bash
-#      - name: build package release
-#        run: |
-#          dotnet build --configuration Release --nologo RVOCS.sln
-#          dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
-#        shell: bash
+  arch:
+    name: arch latest
+    runs-on: ubuntu-20.04
+    container: archlinux:latest
+    steps:
+      - name: pre-checkout setup
+        run: |
+          pacman --needed --noconfirm --noprogressbar -S -u -y \
+            ca-certificates \
+            curl \
+            git \
+            icu \
+            lttng-ust \
+            zlib
+          rm -rf \
+            /var/cache/pacman/pkg/* \
+            /var/lib/pacman/sync/*
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+      - name: build package debug
+        run: |
+          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
+        shell: bash
+      - name: build package release
+        run: |
+          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
+        shell: bash
 
   centos:
     name: centos latest
@@ -96,6 +96,41 @@ jobs:
           dnf install -q -y \
             ca-certificates \
             curl \
+            git \
+            glibc-langpack-en \
+            libicu \
+            lttng-ust \
+            zlib
+          rm -rf /var/cache/yum
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+      - name: build package debug
+        run: |
+          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
+        shell: bash
+      - name: build package release
+        run: |
+          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
+        shell: bash
+
+  fedora:
+    name: fedora latest
+    runs-on: ubuntu-20.04
+    container: fedora:latest
+    steps:
+      - name: pre-checkout setup
+        run: |
+          dnf install -q -y \
+            ca-certificates \
+            curl \
+            findutils \
             git \
             glibc-langpack-en \
             libicu \
