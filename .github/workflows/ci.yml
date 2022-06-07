@@ -68,7 +68,7 @@ jobs:
             zlib
         shell: sh
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: post-checkout setup
         uses: actions/setup-dotnet@v1
         with:
@@ -103,7 +103,7 @@ jobs:
             /var/lib/pacman/sync/*
         shell: bash
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: post-checkout setup
         uses: actions/setup-dotnet@v1
         with:
@@ -137,7 +137,7 @@ jobs:
           rm -rf /var/cache/yum
         shell: bash
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: post-checkout setup
         uses: actions/setup-dotnet@v1
         with:
@@ -172,7 +172,7 @@ jobs:
           rm -rf /var/cache/yum
         shell: bash
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: post-checkout setup
         uses: actions/setup-dotnet@v1
         with:
@@ -193,7 +193,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: setup
         uses: actions/setup-dotnet@v1
         with:
@@ -229,7 +229,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         shell: bash
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: post-checkout setup
         uses: actions/setup-dotnet@v1
         with:
@@ -258,7 +258,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: setup
         uses: actions/setup-dotnet@v1
         with:
