@@ -68,9 +68,9 @@ jobs:
             zlib
         shell: sh
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '5.0.x'
       - name: build package debug
@@ -103,9 +103,9 @@ jobs:
             /var/lib/pacman/sync/*
         shell: bash
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '5.0.x'
       - name: build package debug
@@ -137,9 +137,9 @@ jobs:
           rm -rf /var/cache/yum
         shell: bash
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '5.0.x'
       - name: build package debug
@@ -172,9 +172,9 @@ jobs:
           rm -rf /var/cache/yum
         shell: bash
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '5.0.x'
       - name: build package debug
@@ -193,9 +193,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: setup
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '5.0.x'
       - name: build package debug
@@ -229,9 +229,9 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         shell: bash
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '5.0.x'
           source-url: https://nuget.pkg.github.com/snape/index.json
@@ -258,9 +258,9 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: setup
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '5.0.x'
       - name: build package debug
