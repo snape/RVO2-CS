@@ -1,0 +1,27 @@
+{
+  "name": "RVO2-CS Documentation",
+  "short_name": "RVO2-CS",
+  "lang": "en_US",
+  "icons": [
+    {
+      "src": "apple-touch-icon-57x57.png",
+      "type": "image/png",
+      "sizes": "57x57"
+    },
+    {
+      "src": "apple-touch-icon-72x72.png",
+      "type": "image/png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "apple-touch-icon-114x114.png",
+      "type": "image/png",
+      "sizes": "114x114"
+    },
+    {
+      "src": "apple-touch-icon-144x144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
+  ]
+}
