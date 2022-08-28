@@ -52,9 +52,9 @@ env:
 
 jobs:
   alpine:
-    name: alpine latest
-    runs-on: ubuntu-20.04
-    container: alpine:latest
+    name: alpine 3
+    runs-on: ubuntu-22.04
+    container: alpine:3
     steps:
       - name: pre-checkout setup
         run: |
@@ -72,7 +72,7 @@ jobs:
       - name: post-checkout setup
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '5.0.x'
+          dotnet-version: '6.0.x'
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
@@ -86,7 +86,7 @@ jobs:
 
   arch:
     name: arch latest
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container: archlinux:latest
     steps:
       - name: pre-checkout setup
@@ -107,7 +107,7 @@ jobs:
       - name: post-checkout setup
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '5.0.x'
+          dotnet-version: '6.0.x'
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
@@ -119,21 +119,24 @@ jobs:
           dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
         shell: bash
 
-  centos:
-    name: centos latest
-    runs-on: ubuntu-20.04
-    container: centos:latest
+  rockylinux:
+    name: rockylinux 9
+    runs-on: ubuntu-22.04
+    container: rockylinux:9
     steps:
       - name: pre-checkout setup
         run: |
+          dnf makecache -q --refresh
           dnf install -q -y \
             ca-certificates \
             curl \
+            findutils \
             git \
             glibc-langpack-en \
             libicu \
             lttng-ust \
             zlib
+          dnf clean all
           rm -rf /var/cache/yum
         shell: bash
       - name: checkout
@@ -141,7 +144,7 @@ jobs:
       - name: post-checkout setup
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '5.0.x'
+          dotnet-version: '6.0.x'
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
@@ -155,11 +158,12 @@ jobs:
 
   fedora:
     name: fedora latest
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container: fedora:latest
     steps:
       - name: pre-checkout setup
         run: |
+          dnf makecache -q --refresh
           dnf install -q -y \
             ca-certificates \
             curl \
@@ -169,6 +173,7 @@ jobs:
             libicu \
             lttng-ust \
             zlib
+          dnf clean all
           rm -rf /var/cache/yum
         shell: bash
       - name: checkout
@@ -176,7 +181,7 @@ jobs:
       - name: post-checkout setup
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '5.0.x'
+          dotnet-version: '6.0.x'
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
@@ -197,7 +202,7 @@ jobs:
       - name: setup
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '5.0.x'
+          dotnet-version: '6.0.x'
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
@@ -210,9 +215,9 @@ jobs:
         shell: zsh -efuo pipefail {0}
 
   ubuntu:
-    name: ubuntu latest
-    runs-on: ubuntu-20.04
-    container: ubuntu:latest
+    name: ubuntu 22.04
+    runs-on: ubuntu-22.04
+    container: ubuntu:22.04
     steps:
       - name: pre-checkout setup
         run: |
@@ -221,8 +226,8 @@ jobs:
             ca-certificates \
             curl \
             git \
-            libicu66 \
-            liblttng-ust0 \
+            libicu70 \
+            liblttng-ust1 \
             zlib1g
           rm -rf /var/lib/apt/lists/*
         env:
@@ -233,7 +238,7 @@ jobs:
       - name: post-checkout setup
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '5.0.x'
+          dotnet-version: '6.0.x'
           source-url: https://nuget.pkg.github.com/snape/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -262,7 +267,7 @@ jobs:
       - name: setup
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '5.0.x'
+          dotnet-version: '6.0.x'
       - name: build package debug
         run: |
           dotnet build --configuration Debug RVOCS.sln

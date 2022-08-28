@@ -53,3 +53,6 @@ trim_trailing_whitespace = false
 
 [*.sln]
 indent_style = tab
+
+[Brewfile]
+indent_size = 4

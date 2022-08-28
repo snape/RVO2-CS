@@ -33,7 +33,7 @@ United States of America
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <ReleaseVersion>2.1.0</ReleaseVersion>
     <PackageId>RVOCS</PackageId>
     <PackageVersion>2.1.0</PackageVersion>

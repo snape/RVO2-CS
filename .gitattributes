@@ -55,6 +55,7 @@
 .editorconfig        text whitespace-2
 .gitattributes       text export-ignore whitespace-2
 .gitignore           text export-ignore whitespace-2
+Brewfile             text diff=ruby export-ignore whitespace-4
 CMakeLists.txt       whitespace-2
 Doxyfile             text linguist-generated whitespace-2
 CODEOWNERS           text whitespace-2

@@ -1,5 +1,8 @@
+# -*- mode: ruby; -*-
+# vi: set ft=ruby:
+
 #
-# codeql.yml
+# Brewfile
 # RVO2 Library C#
 #
 # SPDX-FileCopyrightText: 2008 University of North Carolina at Chapel Hill
@@ -31,31 +34,7 @@
 # <https://gamma.cs.unc.edu/RVO2/>
 #
 
----
-name: codeql
-
-on:  # yamllint disable-line rule:truthy
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  schedule:
-    - cron: '0 6 * * 3'
-
-jobs:
-  analyze:
-    name: analyze
-    runs-on: ubuntu-22.04
-    steps:
-    - name: checkout
-      uses: actions/checkout@v3
-    - name: initialize codeql
-      uses: github/codeql-action/init@v2
-      with:
-        languages: csharp
-    - name: autobuild
-      uses: github/codeql-action/autobuild@v2
-    - name: perform codeql analysis
-      uses: github/codeql-action/analyze@v2
+brew 'dotnet'
+brew 'jsonlint'
+brew 'markdownlint-cli'
+brew 'yamllint'
