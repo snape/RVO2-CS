@@ -45,6 +45,9 @@ insert_final_newline = true
 max_line_length = 80
 trim_trailing_whitespace = true
 
+[*.bazel]
+indent_size = 4
+
 [*.cs]
 indent_size = 4
 
@@ -53,6 +56,12 @@ trim_trailing_whitespace = false
 
 [*.sln]
 indent_style = tab
+
+[.bazelignore]
+indent_size = 4
+
+[.bazelrc]
+indent_size = 4
 
 [Brewfile]
 indent_size = 4

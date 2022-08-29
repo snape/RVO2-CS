@@ -41,6 +41,7 @@
 
 *                    text=auto
 
+*.bazel              text diff=python linguist-language=starlark whitespace-4
 *.cmake              text whitespace-2
 *.cs                 text diff=csharp whitespace-4
 *.csproj             text diff=html linguist-generated whitespace-2
@@ -53,6 +54,7 @@
 *.txt                text
 *.yml                text whitespace-2
 
+.bazelignore         text whitespace-4
 .editorconfig        text whitespace-2
 .gitattributes       text export-ignore whitespace-2
 .gitignore           text export-ignore whitespace-2

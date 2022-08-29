@@ -1,8 +1,5 @@
-# -*- mode: ruby; -*-
-# vi: set ft=ruby:
-
 #
-# Brewfile
+# .bazelrc
 # RVO2 Library C#
 #
 # SPDX-FileCopyrightText: 2008 University of North Carolina at Chapel Hill
@@ -34,12 +31,14 @@
 # <https://gamma.cs.unc.edu/RVO2/>
 #
 
-brew 'bazel', conflicts_with: ['bazelisk']
-brew 'buildifier'
-brew 'cmake'
-brew 'dotnet'
-brew 'jsonlint'
-brew 'markdownlint-cli'
-brew 'ninja'
-brew 'python'
-brew 'yamllint'
+build --enable_platform_specific_config=true
+build --legacy_external_runfiles=false
+
+build:macos --apple_platform_type=macos
+build:macos --host_platform=@io_bazel_rules_dotnet//dotnet/toolchain:darwin_amd64_6.0.101
+build:macos --platforms=@io_bazel_rules_dotnet//dotnet/toolchain:darwin_amd64_6.0.101
+
+build:linux --host_platform=@io_bazel_rules_dotnet//dotnet/toolchain:linux_amd64_6.0.101
+build:linux --platforms=@io_bazel_rules_dotnet//dotnet/toolchain:linux_amd64_6.0.101
+
+try-import %workspace%/.user.bazelrc

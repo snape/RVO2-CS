@@ -47,6 +47,7 @@ United States of America
     <RepositoryBranch>main</RepositoryBranch>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="BUILD.bazel" />
     <None Remove="CMakeLists.txt" />
   </ItemGroup>
 </Project>

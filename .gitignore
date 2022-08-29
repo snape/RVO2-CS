@@ -36,7 +36,9 @@
 
 /_build/
 /.idea/
+/.user.bazelrc
 /.vs/
+/bazel-*
 /cmake-build-*/
 bin/
 html/

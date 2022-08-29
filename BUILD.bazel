@@ -1,0 +1,88 @@
+# -*- mode: bazel; -*-
+# vi: set ft=bazel:
+
+#
+# BUILD.bazel
+# RVO2 Library C#
+#
+# SPDX-FileCopyrightText: 2008 University of North Carolina at Chapel Hill
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Please send all bug reports to <geom@cs.unc.edu>.
+#
+# The authors may be contacted via:
+#
+# Jur van den Berg, Stephen J. Guy, Jamie Snape, Ming C. Lin, Dinesh Manocha
+# Dept. of Computer Science
+# 201 S. Columbia St.
+# Frederick P. Brooks, Jr. Computer Science Bldg.
+# Chapel Hill, N.C. 27599-3175
+# United States of America
+#
+# <https://gamma.cs.unc.edu/RVO2/>
+#
+
+load("@rules_license//rules:license.bzl", "license")
+load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files")
+load("@rules_pkg//pkg:pkg.bzl", "pkg_deb", "pkg_tar")
+
+package(default_applicable_licenses = [":license"])
+
+licenses(["notice"])  # Apache-2.0
+
+license(
+    name = "license",
+    copyright_notice = "2008 University of North Carolina at Chapel Hill",
+    license_kinds = ["@rules_license//licenses/spdx:Apache-2.0"],
+    license_text = "LICENSE",
+    visibility = ["//visibility:public"],
+)
+
+exports_files(
+    ["LICENSE"],
+    visibility = ["//visibility:public"],
+)
+
+pkg_files(
+    name = "doc",
+    srcs = ["LICENSE"],
+    attributes = pkg_attributes(mode = "0644"),
+    prefix = "usr/share/doc/RVOCS",
+    visibility = ["//visibility:private"],
+)
+
+pkg_tar(
+    name = "RVOCS",
+    srcs = [
+        ":doc",
+        "//RVOCS:lib",
+    ],
+    extension = "tar.gz",
+    visibility = ["//visibility:private"],
+)
+
+pkg_deb(
+    name = "deb",
+    architecture = "amd64",
+    data = ":RVOCS",
+    description = "Optimal Reciprocal Collision Avoidance for C#",
+    homepage = "https://gamma.cs.unc.edu/RVO2/",
+    maintainer = "Jamie Snape",
+    package = "rvocs",
+    priority = "optional",
+    section = "libdevel",
+    version = "2.1.0",
+    visibility = ["//visibility:private"],
+)

@@ -51,8 +51,104 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
 jobs:
-  alpine:
-    name: alpine 3
+  bazel_arch:
+    name: bazel arch latest
+    runs-on: ubuntu-22.04
+    container: archlinux:latest
+    steps:
+      - name: pre-checkout setup
+        run: |
+          pacman --needed --noconfirm --noprogressbar -S -u -y \
+            bazel \
+            ca-certificates \
+            curl \
+            gcc \
+            git \
+            icu \
+            lttng-ust \
+            python \
+            which \
+            zlib
+          rm -rf \
+            /var/cache/pacman/pkg/* \
+            /var/lib/pacman/sync/*
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+      - name: build package
+        run: bazel build ...
+        shell: bash
+
+  bazel_macos:
+    name: bazel macos latest
+    runs-on: macos-latest
+    steps:
+      - name: pre-checkout setup
+        run: |
+          brew update -q
+          brew unlink -q bazelisk
+          brew install -q \
+            bazel \
+            python
+          rm -rf $(brew --cache)
+        env:
+          HOMEBREW_NO_INSTALL_CLEANUP: 1
+        shell: zsh -efuo pipefail {0}
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+      - name: build package
+        run: bazel build ...
+        shell: zsh -efuo pipefail {0}
+
+  bazel_ubuntu:
+    name: bazel ubuntu 22.04
+    runs-on: ubuntu-22.04
+    container: ubuntu:latest
+    steps:
+      - name: pre-checkout setup
+        run: |
+          apt-get -qq update
+          apt-get -qq -o Dpkg::Use-Pty=0 --no-install-recommends install \
+            ca-certificates \
+            curl \
+            g++ \
+            git \
+            gnupg \
+            libicu70 \
+            liblttng-ust1 \
+            python-is-python3 \
+            zlib1g
+          curl -sS https://bazel.build/bazel-release.pub.gpg | gpg --dearmor - \
+            > /usr/share/keyrings/bazel-archive-keyring.gpg
+          echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8' \
+            > /etc/apt/sources.list.d/bazel.list
+          apt-get -qq update
+          apt-get -qq -o Dpkg::Use-Pty=0 --no-install-recommends install bazel
+          rm -rf /var/lib/apt/lists/*
+        env:
+          APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE: 1
+          DEBIAN_FRONTEND: noninteractive
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+      - name: build package
+        run: bazel build ...
+        shell: bash
+
+  dotnet_alpine:
+    name: dotnet alpine 3
     runs-on: ubuntu-22.04
     container: alpine:3
     steps:
@@ -84,8 +180,8 @@ jobs:
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: sh
 
-  arch:
-    name: arch latest
+  dotnet_arch:
+    name: dotnet arch latest
     runs-on: ubuntu-22.04
     container: archlinux:latest
     steps:
@@ -119,8 +215,8 @@ jobs:
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
 
-  rockylinux:
-    name: rockylinux 9
+  dotnet_rockylinux:
+    name: dotnet rockylinux 9
     runs-on: ubuntu-22.04
     container: rockylinux:9
     steps:
@@ -156,8 +252,8 @@ jobs:
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
 
-  fedora:
-    name: fedora latest
+  dotnet_fedora:
+    name: dotnet fedora latest
     runs-on: ubuntu-22.04
     container: fedora:latest
     steps:
@@ -193,8 +289,8 @@ jobs:
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
 
-  macos:
-    name: macos latest
+  dotnet_macos:
+    name: dotnet macos latest
     runs-on: macos-latest
     steps:
       - name: checkout
@@ -214,8 +310,8 @@ jobs:
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: zsh -efuo pipefail {0}
 
-  ubuntu:
-    name: ubuntu 22.04
+  dotnet_ubuntu:
+    name: dotnet ubuntu 22.04
     runs-on: ubuntu-22.04
     container: ubuntu:22.04
     steps:
@@ -258,8 +354,8 @@ jobs:
         shell: bash
         if: ${{ github.event.release.published }}
 
-  windows:
-    name: windows latest
+  dotnet_windows:
+    name: dotnet windows latest
     runs-on: windows-latest
     steps:
       - name: checkout

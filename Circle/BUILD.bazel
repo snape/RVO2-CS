@@ -1,8 +1,8 @@
-# -*- mode: ruby; -*-
-# vi: set ft=ruby:
+# -*- mode: bazel; -*-
+# vi: set ft=bazel:
 
 #
-# Brewfile
+# Circle/BUILD.bazel
 # RVO2 Library C#
 #
 # SPDX-FileCopyrightText: 2008 University of North Carolina at Chapel Hill
@@ -34,12 +34,20 @@
 # <https://gamma.cs.unc.edu/RVO2/>
 #
 
-brew 'bazel', conflicts_with: ['bazelisk']
-brew 'buildifier'
-brew 'cmake'
-brew 'dotnet'
-brew 'jsonlint'
-brew 'markdownlint-cli'
-brew 'ninja'
-brew 'python'
-brew 'yamllint'
+load("@io_bazel_rules_dotnet//dotnet:defs.bzl", "csharp_binary")
+
+package(default_applicable_licenses = ["//:license"])
+
+licenses(["notice"])  # Apache-2.0
+
+csharp_binary(
+    name = "Circle.exe",
+    srcs = ["Circle.cs"],
+    target_framework = "6.0.101",
+    version = "2.2.0",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//RVOCS:RVOCS.dll",
+        "@core_sdk_stdlib//:libraryset",
+    ],
+)
