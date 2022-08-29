@@ -1,5 +1,4 @@
-<!--
-RVOCS.csproj
+global.json
 RVO2 Library C#
 
 SPDX-FileCopyrightText: 2008 University of North Carolina at Chapel Hill
@@ -29,24 +28,3 @@ Chapel Hill, N.C. 27599-3175
 United States of America
 
 <https://gamma.cs.unc.edu/RVO2/>
--->
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>RVO</RootNamespace>
-    <PackageId>RVOCS</PackageId>
-    <PackageVersion>2.2.0</PackageVersion>
-    <Authors>Jur van den Berg, Stephen J. Guy, Jamie Snape, Ming C. Lin, Dinesh Manocha</Authors>
-    <Title>RVO2 Library C#</Title>
-    <Description>Optimal Reciprocal Collision Avoidance for C#</Description>
-    <Copyright>2008 University of North Carolina at Chapel Hill</Copyright>
-    <PackageLicense>Apache-2.0</PackageLicense>
-    <PackageProjectUrl>https://gamma.cs.unc.edu/RVO2/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/snape/RVO2-CS</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryBranch>main</RepositoryBranch>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Remove="CMakeLists.txt" />
-  </ItemGroup>
-</Project>

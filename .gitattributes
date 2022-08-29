@@ -46,6 +46,7 @@
 *.csproj             text diff=html linguist-generated whitespace-2
 *.css                text diff=css linguist-documentation whitespace=trailing-space
 *.html               text diff=html linguist-documentation whitespace=trailing-space
+*.json               text whitespace-2
 *.license            text linguist-documentation whitespace-0
 *.md                 text diff=markdown whitespace-md
 *.sln                text linguist-generated whitespace=tabwidth=2,trailing-space

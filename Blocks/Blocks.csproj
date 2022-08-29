@@ -1,5 +1,5 @@
 <!--
-Circle.csproj
+Blocks.csproj
 RVO2 Library C#
 
 SPDX-FileCopyrightText: 2008 University of North Carolina at Chapel Hill
@@ -34,29 +34,10 @@ United States of America
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <ReleaseVersion>2.1.0</ReleaseVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>portable</DebugType>
-    <Optimize>false</Optimize>
-    <DefineConstants>TRACE;DEBUG;NET;NET5_0;NETCOREAPP</DefineConstants>
-    <WarningLevel>4</WarningLevel>
-    <NoWarn>1701;1702</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType></DebugType>
-    <Optimize>true</Optimize>
-    <DefineConstants>TRACE;RELEASE;NET;NET5_0;NETCOREAPP</DefineConstants>
-    <WarningLevel>4</WarningLevel>
-    <NoWarn>1701;1702</NoWarn>
+    <ReleaseVersion>2.2.0</ReleaseVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\RVOCS.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Circle.cs" />
+    <ProjectReference Include="..\RVOCS\RVOCS.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="CMakeLists.txt" />

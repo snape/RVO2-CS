@@ -1,8 +1,8 @@
-# -*- mode: gitignore; -*-
-# vi: set ft=gitignore:
+# -*- mode: cmake; -*-
+# vi: set ft=cmake:
 
 #
-# .gitignore
+# RVOCS/CMakeLists.txt
 # RVO2 Library C#
 #
 # SPDX-FileCopyrightText: 2008 University of North Carolina at Chapel Hill
@@ -34,10 +34,5 @@
 # <https://gamma.cs.unc.edu/RVO2/>
 #
 
-/_build/
-/.idea/
-/.vs/
-/cmake-build-*/
-bin/
-html/
-obj/
+include_external_msproject(RVOCS RVOCS.csproj
+  GUID 16285A26-6292-406E-9426-65BB5A017CB3)

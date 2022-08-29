@@ -42,5 +42,6 @@ project(RVOCS
 
 include(CTest)
 
-add_subdirectory(src)
-add_subdirectory(examples)
+add_subdirectory(RVOCS)
+add_subdirectory(Blocks)
+add_subdirectory(Circle)

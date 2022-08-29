@@ -34,7 +34,10 @@
 # <https://gamma.cs.unc.edu/RVO2/>
 #
 
+brew 'cmake'
 brew 'dotnet'
 brew 'jsonlint'
 brew 'markdownlint-cli'
+brew 'ninja'
+brew 'python'
 brew 'yamllint'

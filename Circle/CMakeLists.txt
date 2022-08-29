@@ -2,7 +2,7 @@
 # vi: set ft=cmake:
 
 #
-# src/CMakeLists.txt
+# Circle/CMakeLists.txt
 # RVO2 Library C#
 #
 # SPDX-FileCopyrightText: 2008 University of North Carolina at Chapel Hill
@@ -34,5 +34,8 @@
 # <https://gamma.cs.unc.edu/RVO2/>
 #
 
-include_external_msproject(RVOCS RVOCS.csproj
-  GUID 9F596498-0857-40AA-A765-6DD3A75B415E)
+if(BUILD_TESTING)
+  # cmake-lint: disable=E1120
+  include_external_msproject(Circle Circle.csproj
+    GUID 3F41A6E2-0894-4A65-8026-3EF310187663 RVOCS)
+endif()

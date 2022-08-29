@@ -76,12 +76,12 @@ jobs:
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
-          dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
         shell: sh
       - name: build package release
         run: |
           dotnet build --configuration Release --nologo RVOCS.sln
-          dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: sh
 
   arch:
@@ -111,12 +111,12 @@ jobs:
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
-          dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
       - name: build package release
         run: |
           dotnet build --configuration Release --nologo RVOCS.sln
-          dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
 
   rockylinux:
@@ -148,12 +148,12 @@ jobs:
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
-          dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
       - name: build package release
         run: |
           dotnet build --configuration Release --nologo RVOCS.sln
-          dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
 
   fedora:
@@ -185,12 +185,12 @@ jobs:
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
-          dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
       - name: build package release
         run: |
           dotnet build --configuration Release --nologo RVOCS.sln
-          dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
 
   macos:
@@ -206,12 +206,12 @@ jobs:
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
-          dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
         shell: zsh -efuo pipefail {0}
       - name: build and pack release
         run: |
           dotnet build --configuration Release --nologo RVOCS.sln
-          dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: zsh -efuo pipefail {0}
 
   ubuntu:
@@ -245,16 +245,16 @@ jobs:
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
-          dotnet pack --configuration Debug --no-build --nologo src/RVOCS.csproj
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
       - name: build package release
         run: |
           dotnet build --configuration Release --nologo RVOCS.sln
-          dotnet pack --configuration Release --no-build --nologo src/RVOCS.csproj
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
       - name: push
         run: |
-          dotnet nuget push --no-symbols true --skip-duplicate src/bin/Release/RVOCS.*.nupkg
+          dotnet nuget push --no-symbols true --skip-duplicate RVOCS/bin/Release/RVOCS.*.nupkg
         shell: bash
         if: ${{ github.event.release.published }}
 
@@ -271,10 +271,10 @@ jobs:
       - name: build package debug
         run: |
           dotnet build --configuration Debug RVOCS.sln
-          dotnet pack --configuration Debug --no-build src\RVOCS.csproj
+          dotnet pack --configuration Debug --no-build RVOCS\RVOCS.csproj
         shell: pwsh
       - name: build and pack release
         run: |
           dotnet build --configuration Release RVOCS.sln
-          dotnet pack --configuration Release --no-build src\RVOCS.csproj
+          dotnet pack --configuration Release --no-build RVOCS\RVOCS.csproj
         shell: pwsh
