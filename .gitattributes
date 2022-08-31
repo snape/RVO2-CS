@@ -43,14 +43,14 @@
 
 *.bazel              text diff=python linguist-language=starlark whitespace-4
 *.cmake              text whitespace-2
-*.cs                 text diff=csharp whitespace-4
-*.csproj             text diff=html linguist-generated whitespace-2
+*.cs                 text diff=csharp eol=crlf whitespace-4
+*.csproj             text diff=html eol=crlf linguist-generated whitespace-2
 *.css                text diff=css linguist-documentation whitespace=trailing-space
 *.html               text diff=html linguist-documentation whitespace=trailing-space
 *.json               text whitespace-2
 *.license            text linguist-documentation whitespace-0
 *.md                 text diff=markdown whitespace-md
-*.sln                text linguist-generated whitespace=tabwidth=2,trailing-space
+*.sln                text eol=crlf linguist-generated whitespace=tabwidth=2,trailing-space
 *.txt                text
 *.yml                text whitespace-2
 

@@ -31,8 +31,8 @@
  * <http://gamma.cs.unc.edu/RVO2/>
  */
 
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace RVO
 {
@@ -62,8 +62,8 @@ namespace RVO
          */
         private struct FloatPair
         {
-            private float a_;
-            private float b_;
+            private readonly float a_;
+            private readonly float b_;
 
             /**
              * <summary>Constructs and initializes a pair of scalar
@@ -309,7 +309,6 @@ namespace RVO
                 {
                     ++leftSize;
                     ++left;
-                    ++right;
                 }
 
                 agentTree_[node].left_ = node + 1;
@@ -335,7 +334,7 @@ namespace RVO
                 return null;
             }
 
-            ObstacleTreeNode node = new ObstacleTreeNode();
+            ObstacleTreeNode node = new();
 
             int optimalSplit = 0;
             int minLeft = obstacles.Count;
@@ -442,7 +441,7 @@ namespace RVO
 
                         Vector2 splitPoint = obstacleJ1.point_ + t * (obstacleJ2.point_ - obstacleJ1.point_);
 
-                        Obstacle newObstacle = new Obstacle();
+                        Obstacle newObstacle = new();
                         newObstacle.point_ = splitPoint;
                         newObstacle.previous_ = obstacleJ1;
                         newObstacle.next_ = obstacleJ2;

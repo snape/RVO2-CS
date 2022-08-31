@@ -47,7 +47,7 @@ namespace RVO
     class Circle
     {
         /* Store the goals of the agents. */
-        IList<Vector2> goals;
+        readonly IList<Vector2> goals;
 
         Circle()
         {
@@ -78,7 +78,7 @@ namespace RVO
             }
         }
 
-        #if RVOCS_OUTPUT_TIME_AND_POSITIONS
+#if RVOCS_OUTPUT_TIME_AND_POSITIONS
         void updateVisualization()
         {
             /* Output the current global time. */
@@ -92,7 +92,7 @@ namespace RVO
 
             Console.WriteLine();
         }
-        #endif
+#endif
 
         void setPreferredVelocities()
         {
@@ -129,7 +129,7 @@ namespace RVO
 
         public static void Main(string[] args)
         {
-            Circle circle = new Circle();
+            Circle circle = new();
 
             /* Set up the scenario. */
             circle.setupScenario();
@@ -137,9 +137,9 @@ namespace RVO
             /* Perform (and manipulate) the simulation. */
             do
             {
-                #if RVOCS_OUTPUT_TIME_AND_POSITIONS
+#if RVOCS_OUTPUT_TIME_AND_POSITIONS
                 circle.updateVisualization();
-                #endif
+#endif
                 circle.setPreferredVelocities();
                 Simulator.Instance.doStep();
             }

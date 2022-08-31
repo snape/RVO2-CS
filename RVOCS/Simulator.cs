@@ -47,9 +47,9 @@ namespace RVO
          */
         private class Worker
         {
-            private ManualResetEvent doneEvent_;
-            private int end_;
-            private int start_;
+            private readonly ManualResetEvent doneEvent_;
+            private readonly int end_;
+            private readonly int start_;
 
             /**
              * <summary>Constructs and initializes a worker.</summary>
@@ -70,7 +70,7 @@ namespace RVO
              *
              * <param name="obj">Unused.</param>
              */
-            internal void step(object obj)
+            internal void step(object _)
             {
                 for (int agentNo = start_; agentNo < end_; ++agentNo)
                 {
@@ -87,7 +87,7 @@ namespace RVO
              *
              * <param name="obj">Unused.</param>
              */
-            internal void update(object obj)
+            internal void update(object _)
             {
                 for (int agentNo = start_; agentNo < end_; ++agentNo)
                 {
@@ -103,7 +103,7 @@ namespace RVO
         internal KdTree kdTree_;
         internal float timeStep_;
 
-        private static Simulator instance_ = new Simulator();
+        private static readonly Simulator instance_ = new();
 
         private Agent defaultAgent_;
         private ManualResetEvent[] doneEvents_;
@@ -136,7 +136,7 @@ namespace RVO
                 return -1;
             }
 
-            Agent agent = new Agent();
+            Agent agent = new();
             agent.id_ = agents_.Count;
             agent.maxNeighbors_ = defaultAgent_.maxNeighbors_;
             agent.maxSpeed_ = defaultAgent_.maxSpeed_;
@@ -187,7 +187,7 @@ namespace RVO
          */
         public int addAgent(Vector2 position, float neighborDist, int maxNeighbors, float timeHorizon, float timeHorizonObst, float radius, float maxSpeed, Vector2 velocity)
         {
-            Agent agent = new Agent();
+            Agent agent = new();
             agent.id_ = agents_.Count;
             agent.maxNeighbors_ = maxNeighbors;
             agent.maxSpeed_ = maxSpeed;
@@ -226,7 +226,7 @@ namespace RVO
 
             for (int i = 0; i < vertices.Count; ++i)
             {
-                Obstacle obstacle = new Obstacle();
+                Obstacle obstacle = new();
                 obstacle.point_ = vertices[i];
 
                 if (i != 0)
@@ -847,8 +847,7 @@ namespace RVO
 
             if (numWorkers_ <= 0)
             {
-                int completionPorts;
-                ThreadPool.GetMinThreads(out numWorkers_, out completionPorts);
+                ThreadPool.GetMinThreads(out numWorkers_, out _);
             }
             workers_ = null;
         }

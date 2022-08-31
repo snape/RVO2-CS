@@ -49,20 +49,20 @@ namespace RVO
     class Blocks
     {
         /* Store the goals of the agents. */
-        IList<Vector2> goals;
+        readonly IList<Vector2> goals;
 
         /** Random number generator. */
-        Random random;
+        readonly Random random;
 
         Blocks()
         {
             goals = new List<Vector2>();
 
-            #if RVOCS_SEED_RANDOM_NUMBER_GENERATOR
+#if RVOCS_SEED_RANDOM_NUMBER_GENERATOR
             random = new Random();
-            #else
+#else
             random = new Random(0);
-            #endif
+#endif
         }
 
         void setupScenario()
@@ -102,32 +102,40 @@ namespace RVO
              * Add (polygonal) obstacles, specifying their vertices in
              * counterclockwise order.
              */
-            IList<Vector2> obstacle1 = new List<Vector2>();
-            obstacle1.Add(new Vector2(-10.0f, 40.0f));
-            obstacle1.Add(new Vector2(-40.0f, 40.0f));
-            obstacle1.Add(new Vector2(-40.0f, 10.0f));
-            obstacle1.Add(new Vector2(-10.0f, 10.0f));
+            IList<Vector2> obstacle1 = new List<Vector2>
+            {
+                new Vector2(-10.0f, 40.0f),
+                new Vector2(-40.0f, 40.0f),
+                new Vector2(-40.0f, 10.0f),
+                new Vector2(-10.0f, 10.0f)
+            };
             Simulator.Instance.addObstacle(obstacle1);
 
-            IList<Vector2> obstacle2 = new List<Vector2>();
-            obstacle2.Add(new Vector2(10.0f, 40.0f));
-            obstacle2.Add(new Vector2(10.0f, 10.0f));
-            obstacle2.Add(new Vector2(40.0f, 10.0f));
-            obstacle2.Add(new Vector2(40.0f, 40.0f));
+            IList<Vector2> obstacle2 = new List<Vector2>
+            {
+                new Vector2(10.0f, 40.0f),
+                new Vector2(10.0f, 10.0f),
+                new Vector2(40.0f, 10.0f),
+                new Vector2(40.0f, 40.0f)
+            };
             Simulator.Instance.addObstacle(obstacle2);
 
-            IList<Vector2> obstacle3 = new List<Vector2>();
-            obstacle3.Add(new Vector2(10.0f, -40.0f));
-            obstacle3.Add(new Vector2(40.0f, -40.0f));
-            obstacle3.Add(new Vector2(40.0f, -10.0f));
-            obstacle3.Add(new Vector2(10.0f, -10.0f));
+            IList<Vector2> obstacle3 = new List<Vector2>
+            {
+                new Vector2(10.0f, -40.0f),
+                new Vector2(40.0f, -40.0f),
+                new Vector2(40.0f, -10.0f),
+                new Vector2(10.0f, -10.0f)
+            };
             Simulator.Instance.addObstacle(obstacle3);
 
-            IList<Vector2> obstacle4 = new List<Vector2>();
-            obstacle4.Add(new Vector2(-10.0f, -40.0f));
-            obstacle4.Add(new Vector2(-10.0f, -10.0f));
-            obstacle4.Add(new Vector2(-40.0f, -10.0f));
-            obstacle4.Add(new Vector2(-40.0f, -40.0f));
+            IList<Vector2> obstacle4 = new List<Vector2>
+            {
+                new Vector2(-10.0f, -40.0f),
+                new Vector2(-10.0f, -10.0f),
+                new Vector2(-40.0f, -10.0f),
+                new Vector2(-40.0f, -40.0f)
+            };
             Simulator.Instance.addObstacle(obstacle4);
 
             /*
@@ -137,7 +145,7 @@ namespace RVO
             Simulator.Instance.processObstacles();
         }
 
-        #if RVOCS_OUTPUT_TIME_AND_POSITIONS
+#if RVOCS_OUTPUT_TIME_AND_POSITIONS
         void updateVisualization()
         {
             /* Output the current global time. */
@@ -151,7 +159,7 @@ namespace RVO
 
             Console.WriteLine();
         }
-        #endif
+#endif
 
         void setPreferredVelocities()
         {
@@ -195,7 +203,7 @@ namespace RVO
 
         public static void Main(string[] args)
         {
-            Blocks blocks = new Blocks();
+            Blocks blocks = new();
 
             /* Set up the scenario. */
             blocks.setupScenario();
@@ -203,9 +211,9 @@ namespace RVO
             /* Perform (and manipulate) the simulation. */
             do
             {
-                #if RVOCS_OUTPUT_TIME_AND_POSITIONS
+#if RVOCS_OUTPUT_TIME_AND_POSITIONS
                 blocks.updateVisualization();
-                #endif
+#endif
                 blocks.setPreferredVelocities();
                 Simulator.Instance.doStep();
             }
