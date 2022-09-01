@@ -60,6 +60,8 @@ Optimal Reciprocal Collision Avoidance for C#
 
 <https://gamma.cs.unc.edu/RVO2/>
 
+[![DOI](https://zenodo.org/badge/45011155.svg)](https://zenodo.org/badge/latestdoi/45011155)
+
 We present a formal approach to reciprocal collision avoidance, where multiple
 independent mobile robots or agents need to avoid collisions with each other
 without communication among agents while moving in a common workspace. Our
@@ -72,7 +74,7 @@ avoidance approach on several dense and complex simulation scenarios workspaces
 involving thousands of agents, and compute collision-free actions for all of
 them in only a few milliseconds.
 
-RVO2 Library C# is an open-source C# .NET 5 implementation of our algorithm in
+RVO2 Library C# is an open-source C# .NET 6 implementation of our algorithm in
 two dimensions. It has a simple API for third-party applications. The user
 specifies static obstacles, agents, and the preferred velocities of the agents.
 The simulation is performed step-by-step via a simple call to the library. The

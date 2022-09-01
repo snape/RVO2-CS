@@ -43,6 +43,7 @@
 
 *.bazel              text diff=python linguist-language=starlark whitespace-4
 *.cmake              text whitespace-2
+*.cff                text linguist-documentation whitespace-2
 *.cs                 text diff=csharp eol=crlf whitespace-4
 *.csproj             text diff=html eol=crlf linguist-generated whitespace-2
 *.css                text diff=css linguist-documentation whitespace=trailing-space
@@ -58,6 +59,7 @@
 .editorconfig        text whitespace-2
 .gitattributes       text export-ignore whitespace-2
 .gitignore           text export-ignore whitespace-2
+.zenodo.json         linguist-documentation
 Brewfile             text diff=ruby export-ignore whitespace-4
 CMakeLists.txt       whitespace-2
 Doxyfile             text linguist-generated whitespace-2
