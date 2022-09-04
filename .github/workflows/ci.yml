@@ -96,6 +96,8 @@ jobs:
             python
           rm -rf $(brew --cache)
         env:
+          HOMEBREW_NO_ANALYTICS: 1
+          HOMEBREW_NO_AUTO_UPDATE: 1
           HOMEBREW_NO_INSTALL_CLEANUP: 1
         shell: zsh -efuo pipefail {0}
       - name: checkout
@@ -115,8 +117,10 @@ jobs:
     steps:
       - name: pre-checkout setup
         run: |
-          apt-get -qq update
-          apt-get -qq -o Dpkg::Use-Pty=0 --no-install-recommends install \
+          apt-get -qq -o APT::Acquire::Retries=4 update \
+            || (sleep 15; apt-get -qq -o APT::Acquire::Retries=4 update)
+          apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
+              --no-install-recommends install \
             ca-certificates \
             curl \
             g++ \
@@ -130,11 +134,13 @@ jobs:
             > /usr/share/keyrings/bazel-archive-keyring.gpg
           echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8' \
             > /etc/apt/sources.list.d/bazel.list
-          apt-get -qq update
-          apt-get -qq -o Dpkg::Use-Pty=0 --no-install-recommends install bazel
+          apt-get -qq -o APT::Acquire::Retries=4 update \
+            || (sleep 15; apt-get -qq -o APT::Acquire::Retries=4 update)
+          apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
+              --no-install-recommends install \
+            bazel
           rm -rf /var/lib/apt/lists/*
         env:
-          APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE: 1
           DEBIAN_FRONTEND: noninteractive
         shell: bash
       - name: checkout
@@ -215,43 +221,6 @@ jobs:
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
 
-  dotnet_rockylinux:
-    name: dotnet rockylinux 9
-    runs-on: ubuntu-22.04
-    container: rockylinux:9
-    steps:
-      - name: pre-checkout setup
-        run: |
-          dnf makecache -q --refresh
-          dnf install -q -y \
-            ca-certificates \
-            curl \
-            findutils \
-            git \
-            glibc-langpack-en \
-            libicu \
-            lttng-ust \
-            zlib
-          dnf clean all
-          rm -rf /var/cache/yum
-        shell: bash
-      - name: checkout
-        uses: actions/checkout@v3
-      - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: '6.0.x'
-      - name: build package debug
-        run: |
-          dotnet build --configuration Debug --nologo RVOCS.sln
-          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
-        shell: bash
-      - name: build package release
-        run: |
-          dotnet build --configuration Release --nologo RVOCS.sln
-          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
-        shell: bash
-
   dotnet_fedora:
     name: dotnet fedora latest
     runs-on: ubuntu-22.04
@@ -259,7 +228,7 @@ jobs:
     steps:
       - name: pre-checkout setup
         run: |
-          dnf makecache -q --refresh
+          dnf makecache -q --refresh || (sleep 15; dnf makecache -q --refresh)
           dnf install -q -y \
             ca-certificates \
             curl \
@@ -310,6 +279,43 @@ jobs:
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: zsh -efuo pipefail {0}
 
+  dotnet_rockylinux:
+    name: dotnet rockylinux 9
+    runs-on: ubuntu-22.04
+    container: rockylinux:9
+    steps:
+      - name: pre-checkout setup
+        run: |
+          dnf makecache -q --refresh || (sleep 15; dnf makecache -q --refresh)
+          dnf install -q -y \
+            ca-certificates \
+            curl \
+            findutils \
+            git \
+            glibc-langpack-en \
+            libicu \
+            lttng-ust \
+            zlib
+          dnf clean all
+          rm -rf /var/cache/yum
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+      - name: build package debug
+        run: |
+          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+      - name: build package release
+        run: |
+          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+
   dotnet_ubuntu:
     name: dotnet ubuntu 22.04
     runs-on: ubuntu-22.04
@@ -317,8 +323,10 @@ jobs:
     steps:
       - name: pre-checkout setup
         run: |
-          apt-get -qq update
-          apt-get -qq -o Dpkg::Use-Pty=0 --no-install-recommends install \
+          apt-get -qq -o APT::Acquire::Retries=4 update \
+            || (sleep 15; apt-get -qq -o APT::Acquire::Retries=4 update)
+          apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
+              --no-install-recommends install \
             ca-certificates \
             curl \
             git \
