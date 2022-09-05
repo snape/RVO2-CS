@@ -1,0 +1,20 @@
+{
+  "name": "RVO2-CS",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bazelbuild.vscode-bazel",
+        "editorconfig.editorconfig",
+        "ms-dotnettools.csharp",
+        "ms-vscode.vscode-markdown-notebook",
+        "ms-vscode.mono-debug",
+        "ms-vscode-remote.remote-containers",
+        "redhat.vscode-yaml"
+      ]
+    }
+  },
+  "dockerComposeFile": "../compose.yaml",
+  "overrideCommand": true,
+  "service": "dev",
+  "workspaceFolder": "/workspace"
+}

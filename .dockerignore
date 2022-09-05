@@ -1,8 +1,8 @@
-# -*- mode: ruby; -*-
-# vi: set ft=ruby:
+# -*- mode: gitignore; -*-
+# vi: set ft=gitignore:
 
 #
-# Brewfile
+# .dockerignore
 # RVO2 Library C#
 #
 # SPDX-FileCopyrightText: 2008 University of North Carolina at Chapel Hill
@@ -34,13 +34,12 @@
 # <https://gamma.cs.unc.edu/RVO2/>
 #
 
-brew 'bazel', conflicts_with: ['bazelisk']
-brew 'buildifier'
-brew 'cmake'
-brew 'dotnet'
-brew 'jsonlint'
-brew 'markdownlint-cli'
-brew 'mono'
-brew 'ninja'
-brew 'python'
-brew 'yamllint'
+_build/
+.idea/
+.user.bazelrc
+.vs/
+**/bin/
+**/html/
+**/obj/
+bazel-*
+cmake-build-*/

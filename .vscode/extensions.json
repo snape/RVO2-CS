@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "bazelbuild.vscode-bazel",
+    "editorconfig.editorconfig",
+    "ms-dotnettools.csharp",
+    "ms-vscode.vscode-markdown-notebook",
+    "ms-vscode.mono-debug",
+    "ms-vscode-remote.remote-containers",
+    "redhat.vscode-yaml"
+  ]
+}
