@@ -52,6 +52,18 @@ indent_size = 4
 end_of_line = crlf
 indent_size = 4
 
+[.bazelignore]
+indent_size = 4
+
+[.bazelrc]
+indent_size = 4
+
+[Brewfile]
+indent_size = 4
+
+[dep5]
+indent_size = 1
+
 csharp_indent_block_contents = true
 csharp_indent_braces = false
 csharp_indent_case_contents = true
