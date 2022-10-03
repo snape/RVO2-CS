@@ -76,7 +76,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package
@@ -103,7 +103,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package
@@ -146,7 +146,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package
@@ -172,7 +172,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package debug
@@ -207,7 +207,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package debug
@@ -244,7 +244,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package debug
@@ -265,7 +265,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package debug
@@ -302,7 +302,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package debug
@@ -340,7 +340,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
           source-url: https://nuget.pkg.github.com/snape/index.json
@@ -369,7 +369,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package debug
