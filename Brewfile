@@ -38,6 +38,7 @@ brew 'bazel', conflicts_with: ['bazelisk']
 brew 'buildifier'
 brew 'cmake'
 brew 'dotnet'
+brew 'git'
 brew 'jsonlint'
 brew 'markdownlint-cli'
 brew 'mono'

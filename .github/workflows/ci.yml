@@ -76,7 +76,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package
@@ -89,11 +89,31 @@ jobs:
     steps:
       - name: pre-checkout setup
         run: |
-          brew update -q
+          rm -f \
+            /usr/local/bin/2to3 \
+            /usr/local/bin/2to3-3.* \
+            /usr/local/bin/idle3 \
+            /usr/local/bin/idle3.* \
+            /usr/local/bin/pydoc3 \
+            /usr/local/bin/pydoc3.* \
+            /usr/local/bin/python3 \
+            /usr/local/bin/python3.* \
+            /usr/local/bin/python3-config \
+            /usr/local/bin/python3.*-config \
+            /usr/local/lib/libtcl8.*.dylib \
+            /usr/local/lib/libtk8.*.dylib
+          brew update-reset -q
+          brew upgrade -f -q
           brew unlink -q bazelisk
           brew install -q \
             bazel \
-            python
+            buildifier \
+            git \
+            python \
+            jsonlint \
+            markdownlint-cli \
+            yamllint
+          brew cleanup -q -s
           rm -rf $(brew --cache)
         env:
           HOMEBREW_NO_ANALYTICS: 1
@@ -103,7 +123,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package
@@ -119,6 +139,8 @@ jobs:
         run: |
           apt-get -qq -o APT::Acquire::Retries=4 update \
             || (sleep 15; apt-get -qq -o APT::Acquire::Retries=4 update)
+          apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
+            upgrade
           apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
               --no-install-recommends install \
             ca-certificates \
@@ -139,6 +161,7 @@ jobs:
           apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
               --no-install-recommends install \
             bazel
+          apt-get -qq -o Dpkg::Use-Pty=0 autoremove
           rm -rf /var/lib/apt/lists/*
         env:
           DEBIAN_FRONTEND: noninteractive
@@ -146,7 +169,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package
@@ -160,7 +183,8 @@ jobs:
     steps:
       - name: pre-checkout setup
         run: |
-          apk add --no-cache \
+          apk upgrade -q --no-cache
+          apk add -q --no-cache \
             bash \
             ca-certificates \
             curl \
@@ -172,7 +196,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package debug
@@ -207,7 +231,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package debug
@@ -229,6 +253,7 @@ jobs:
       - name: pre-checkout setup
         run: |
           dnf makecache -q --refresh || (sleep 15; dnf makecache -q --refresh)
+          dnf upgrade -q -y
           dnf install -q -y \
             ca-certificates \
             curl \
@@ -244,7 +269,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package debug
@@ -265,7 +290,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package debug
@@ -287,9 +312,10 @@ jobs:
       - name: pre-checkout setup
         run: |
           dnf makecache -q --refresh || (sleep 15; dnf makecache -q --refresh)
+          dnf upgrade -q -y
           dnf install -q -y \
             ca-certificates \
-            curl \
+            curl-minimal \
             findutils \
             git \
             glibc-langpack-en \
@@ -302,7 +328,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package debug
@@ -326,6 +352,8 @@ jobs:
           apt-get -qq -o APT::Acquire::Retries=4 update \
             || (sleep 15; apt-get -qq -o APT::Acquire::Retries=4 update)
           apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
+            upgrade
+          apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
               --no-install-recommends install \
             ca-certificates \
             curl \
@@ -333,6 +361,7 @@ jobs:
             libicu70 \
             liblttng-ust1 \
             zlib1g
+          apt-get -qq -o Dpkg::Use-Pty=0 autoremove
           rm -rf /var/lib/apt/lists/*
         env:
           DEBIAN_FRONTEND: noninteractive
@@ -340,7 +369,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
           source-url: https://nuget.pkg.github.com/snape/index.json
@@ -369,7 +398,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: setup
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: build package debug
