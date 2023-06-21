@@ -31,14 +31,23 @@
 # <https://gamma.cs.unc.edu/RVO2/>
 #
 
-build --enable_platform_specific_config=true
+build --enable_runfiles=true
+build --incompatible_config_setting_private_default_visibility=true
+build --incompatible_disable_starlark_host_transitions=true
+build --incompatible_strict_action_env=true
 build --legacy_external_runfiles=false
+build --remote_upload_local_results=false
+build --sandbox_default_allow_network=false
 
 build:macos --apple_platform_type=macos
-build:macos --host_platform=@io_bazel_rules_dotnet//dotnet/toolchain:darwin_amd64_6.0.101
-build:macos --platforms=@io_bazel_rules_dotnet//dotnet/toolchain:darwin_amd64_6.0.101
 
-build:linux --host_platform=@io_bazel_rules_dotnet//dotnet/toolchain:linux_amd64_6.0.101
-build:linux --platforms=@io_bazel_rules_dotnet//dotnet/toolchain:linux_amd64_6.0.101
+common --enable_platform_specific_config=true
+common --heap_dump_on_oom=true
+
+startup --host_jvm_args=-DBAZEL_TRACK_SOURCE_DIRECTORIES=1
+startup --windows_enable_symlinks
+
+test --incompatible_exclusive_test_sandboxed=true
+test --test_verbose_timeout_warnings=true
 
 try-import %workspace%/.user.bazelrc

@@ -78,7 +78,7 @@ jobs:
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          global-json-file: global.json
       - name: build package
         run: bazel build ...
         shell: bash
@@ -92,6 +92,8 @@ jobs:
           rm -f \
             /usr/local/bin/2to3 \
             /usr/local/bin/2to3-3.* \
+            /usr/local/bin/go \
+            /usr/local/bin/gofmt \
             /usr/local/bin/idle3 \
             /usr/local/bin/idle3.* \
             /usr/local/bin/pydoc3 \
@@ -125,7 +127,7 @@ jobs:
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          global-json-file: global.json
       - name: build package
         run: bazel build ...
         shell: zsh -efuo pipefail {0}
@@ -171,7 +173,7 @@ jobs:
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          global-json-file: global.json
       - name: build package
         run: bazel build ...
         shell: bash
@@ -198,7 +200,7 @@ jobs:
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          global-json-file: global.json
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
@@ -233,7 +235,7 @@ jobs:
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          global-json-file: global.json
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
@@ -271,7 +273,7 @@ jobs:
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          global-json-file: global.json
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
@@ -292,7 +294,7 @@ jobs:
       - name: setup
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          global-json-file: global.json
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
@@ -330,7 +332,7 @@ jobs:
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          global-json-file: global.json
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.sln
@@ -371,7 +373,7 @@ jobs:
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          global-json-file: global.json
           source-url: https://nuget.pkg.github.com/snape/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -400,7 +402,7 @@ jobs:
       - name: setup
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          global-json-file: global.json
       - name: build package debug
         run: |
           dotnet build --configuration Debug RVOCS.sln

@@ -34,7 +34,7 @@
 # <https://gamma.cs.unc.edu/RVO2/>
 #
 
-load("@io_bazel_rules_dotnet//dotnet:defs.bzl", "csharp_binary")
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary")
 
 package(default_applicable_licenses = ["//:license"])
 
@@ -43,11 +43,8 @@ licenses(["notice"])  # Apache-2.0
 csharp_binary(
     name = "Blocks.exe",
     srcs = ["Blocks.cs"],
-    target_framework = "6.0.101",
-    version = "2.2.0",
+    private_deps = ["@rules_dotnet_nuget_packages//microsoft.netcore.app.ref"],
+    target_frameworks = ["net6.0"],
     visibility = ["//visibility:private"],
-    deps = [
-        "//RVOCS:RVOCS.dll",
-        "@core_sdk_stdlib//:libraryset",
-    ],
+    deps = ["//RVOCS:RVOCS.dll"],
 )

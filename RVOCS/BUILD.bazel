@@ -34,7 +34,7 @@
 # <https://gamma.cs.unc.edu/RVO2/>
 #
 
-load("@io_bazel_rules_dotnet//dotnet:defs.bzl", "csharp_library")
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files")
 
 package(default_applicable_licenses = ["//:license"])
@@ -52,10 +52,9 @@ csharp_library(
         "Simulator.cs",
         "Vector2.cs",
     ],
-    target_framework = "6.0.101",
-    version = "2.2.0",
+    private_deps = ["@rules_dotnet_nuget_packages//microsoft.netcore.app.ref"],
+    target_frameworks = ["net6.0"],
     visibility = ["//visibility:public"],
-    deps = ["@core_sdk_stdlib//:libraryset"],
 )
 
 pkg_files(
