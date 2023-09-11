@@ -74,7 +74,7 @@ jobs:
             /var/lib/pacman/sync/*
         shell: bash
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
@@ -123,7 +123,7 @@ jobs:
           HOMEBREW_NO_INSTALL_CLEANUP: 1
         shell: zsh -efuo pipefail {0}
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
@@ -169,7 +169,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         shell: bash
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
@@ -196,7 +196,7 @@ jobs:
             zlib
         shell: sh
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
@@ -231,7 +231,7 @@ jobs:
             /var/lib/pacman/sync/*
         shell: bash
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
@@ -269,7 +269,7 @@ jobs:
           rm -rf /var/cache/yum
         shell: bash
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
@@ -290,7 +290,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: setup
         uses: actions/setup-dotnet@v3
         with:
@@ -328,7 +328,7 @@ jobs:
           rm -rf /var/cache/yum
         shell: bash
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
@@ -369,7 +369,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         shell: bash
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: post-checkout setup
         uses: actions/setup-dotnet@v3
         with:
@@ -398,7 +398,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: setup
         uses: actions/setup-dotnet@v3
         with:
