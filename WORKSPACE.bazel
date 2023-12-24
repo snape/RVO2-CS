@@ -40,16 +40,16 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "rules_dotnet",
-    sha256 = "77575d68c609d98b92f3df8db79944e7b60c035766e1c233349aeb1659c86ff9",
-    strip_prefix = "rules_dotnet-0.8.12",
-    urls = ["https://github.com/bazelbuild/rules_dotnet/releases/download/v0.8.12/rules_dotnet-v0.8.12.tar.gz"],
+    sha256 = "718cb2c3431523aaf3df7feed0e997e4ded002abbf56ac37d9c0536a812d6276",
+    strip_prefix = "rules_dotnet-0.12.0",
+    urls = ["https://github.com/bazelbuild/rules_dotnet/releases/download/v0.12.0/rules_dotnet-v0.12.0.tar.gz"],
 )
 
 load("@rules_dotnet//dotnet:repositories.bzl", "dotnet_register_toolchains", "rules_dotnet_dependencies")
 
 rules_dotnet_dependencies()
 
-dotnet_register_toolchains("dotnet", "6.0.114")
+dotnet_register_toolchains("dotnet", "6.0.121")
 
 load("@rules_dotnet//dotnet:rules_dotnet_nuget_packages.bzl", "rules_dotnet_nuget_packages")
 
@@ -57,10 +57,10 @@ rules_dotnet_nuget_packages()
 
 http_archive(
     name = "rules_license",
-    sha256 = "6157e1e68378532d0241ecd15d3c45f6e5cfd98fc10846045509fb2a7cc9e381",
+    sha256 = "4531deccb913639c30e5c7512a054d5d875698daeb75d8cf90f284375fe7c360",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_license/releases/download/0.0.4/rules_license-0.0.4.tar.gz",
-        "https://github.com/bazelbuild/rules_license/releases/download/0.0.4/rules_license-0.0.4.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_license/releases/download/0.0.7/rules_license-0.0.7.tar.gz",
+        "https://github.com/bazelbuild/rules_license/releases/download/0.0.7/rules_license-0.0.7.tar.gz",
     ],
 )
 

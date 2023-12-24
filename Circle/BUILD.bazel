@@ -43,8 +43,8 @@ licenses(["notice"])  # Apache-2.0
 csharp_binary(
     name = "Circle.exe",
     srcs = ["Circle.cs"],
-    private_deps = ["@rules_dotnet_nuget_packages//microsoft.netcore.app.ref"],
     target_frameworks = ["net6.0"],
+    targeting_packs = ["@rules_dotnet_nuget_packages//microsoft.netcore.app.ref"],
     visibility = ["//visibility:private"],
     deps = ["//RVOCS:RVOCS.dll"],
 )

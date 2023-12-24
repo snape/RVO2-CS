@@ -67,8 +67,6 @@ namespace RVO
 
             /**
              * <summary>Performs a simulation step.</summary>
-             *
-             * <param name="obj">Unused.</param>
              */
             internal void step(object _)
             {
@@ -84,8 +82,6 @@ namespace RVO
             /**
              * <summary>updates the two-dimensional position and
              * two-dimensional velocity of each agent.</summary>
-             *
-             * <param name="obj">Unused.</param>
              */
             internal void update(object _)
             {
