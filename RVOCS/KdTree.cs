@@ -69,8 +69,8 @@ namespace RVO
              * <summary>Constructs and initializes a pair of scalar
              * values.</summary>
              *
-             * <param name="a">The first scalar value.</returns>
-             * <param name="b">The second scalar value.</returns>
+             * <param name="a">The first scalar value.</param>
+             * <param name="b">The second scalar value.</param>
              */
             internal FloatPair(float a, float b)
             {

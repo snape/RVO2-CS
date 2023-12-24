@@ -58,6 +58,8 @@
 *.yml                text whitespace-2
 
 .bazelignore         text whitespace-4
+.bazelrc             text whitespace-4
+.bazelversion        text whitespace-4
 .dockerignore        text whitespace-2
 .editorconfig        text whitespace-2
 .gitattributes       text export-ignore whitespace-2
