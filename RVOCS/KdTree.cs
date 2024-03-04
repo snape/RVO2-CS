@@ -303,16 +303,14 @@ namespace RVO
                     }
                 }
 
-                int leftSize = left - begin;
-
-                if (leftSize == 0)
-                {
-                    ++leftSize;
+                if (left == begin)
+                {                    
                     ++left;
+                    ++right;
                 }
 
                 agentTree_[node].left_ = node + 1;
-                agentTree_[node].right_ = node + 2 * leftSize;
+                agentTree_[node].right_ = node + 2 * (left - begin);
 
                 buildAgentTreeRecursive(begin, left, agentTree_[node].left_);
                 buildAgentTreeRecursive(left, end, agentTree_[node].right_);
