@@ -34,10 +34,11 @@
 # <https://gamma.cs.unc.edu/RVO2/>
 #
 
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 project(RVOCS
   VERSION 2.1.0
   DESCRIPTION "Optimal Reciprocal Collision Avoidance for C#"
+  HOMEPAGE_URL https://gamma.cs.unc.edu/RVO2/
   LANGUAGES NONE)
 
 include(CTest)

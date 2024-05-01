@@ -1,3 +1,5 @@
+# syntax=docker.io/docker/dockerfile:1
+
 #
 # Dockerfile
 # RVO2 Library C#
@@ -31,9 +33,9 @@
 # <https://gamma.cs.unc.edu/RVO2/>
 #
 
-FROM ubuntu:22.04
+FROM ubuntu:latest
 LABEL org.opencontainers.image.authors="Jur van den Berg, Stephen J. Guy, Jamie Snape, Ming C. Lin, Dinesh Manocha"
-LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:latest"
 LABEL org.opencontainers.image.description="Optimal Reciprocal Collision Avoidance for C#"
 LABEL org.opencontainers.image.licenses="Apache-2.0"
 LABEL org.opencontainers.image.source="https://github.com/snape/RVO2/"
@@ -48,19 +50,17 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get update -qq \
   && apt-get install --no-install-recommends -o Dpkg::Use-Pty=0 -qy \
     ca-certificates \
+    cmake \
     cmake-format \
     dirmngr \
-    dotnet6 \
-    dpkg \
+    dotnet-sdk-8.0 \
     dpkg-dev \
     file \
     git \
-    gnupg \
-    libgssapi-krb5-2 \
-    libicu70 \
-    libssl3 \
-    libstdc++6 \
+    jsonlint \
+    libicu74 \
     make \
+    markdownlint \
     mono-complete \
     nano \
     netbase \
@@ -68,24 +68,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     npm \
     python3 \
     reuse \
-    unzip \
-    wget \
     yamllint \
-    zlib1g-dev \
-  && wget -qO - https://bazel.build/bazel-release.pub.gpg | gpg --dearmor - \
-    > /usr/share/keyrings/bazel-archive-keyring.gpg \
-  && echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8' \
-    > /etc/apt/sources.list.d/bazel.list \
-  && wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc \
-    | gpg --dearmor - > /usr/share/keyrings/kitware-archive-keyring.gpg \
-  && echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu jammy main' \
-    > /etc/apt/sources.list.d/kitware.list \
-  && apt-get update -qq \
-  && apt-get install --no-install-recommends -o Dpkg::Use-Pty=0 -qy \
-    bazel \
-    cmake \
+    zlib1g \
   && rm -rf /var/lib/apt/lists/* \
   && npm install -g \
-    @bazel/buildifier \
-    jsonlint \
-    markdownlint-cli
+    @bazel/bazelisk \
+    @bazel/buildifier
