@@ -33,7 +33,7 @@ United States of America
 -->
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>RVO</RootNamespace>
     <PackageId>RVOCS</PackageId>
     <PackageVersion>2.2.0</PackageVersion>

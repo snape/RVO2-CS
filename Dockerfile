@@ -33,7 +33,8 @@
 # <https://gamma.cs.unc.edu/RVO2/>
 #
 
-FROM ubuntu:latest
+FROM ubuntu:24.04
+ARG TARGETARCH
 LABEL org.opencontainers.image.authors="Jur van den Berg, Stephen J. Guy, Jamie Snape, Ming C. Lin, Dinesh Manocha"
 LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:latest"
 LABEL org.opencontainers.image.description="Optimal Reciprocal Collision Avoidance for C#"
@@ -42,10 +43,10 @@ LABEL org.opencontainers.image.source="https://github.com/snape/RVO2/"
 LABEL org.opencontainers.image.title="RVO2 Library C#"
 LABEL org.opencontainers.image.url="https://gamma.cs.unc.edu/RVO2/"
 LABEL org.opencontainers.image.vendor="University of North Carolina at Chapel Hill"
-ENV LANG C.UTF-8
-ENV LOGNAME root
-ENV SHELL /bin/bash
-ENV USER root
+LABEL org.opencontainers.image.version="2.1.0"
+ENV LANG=C.UTF-8
+ENV LOGNAME=root
+ENV USER=root
 RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get update -qq \
   && apt-get install --no-install-recommends -o Dpkg::Use-Pty=0 -qy \
@@ -54,9 +55,11 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     cmake-format \
     dirmngr \
     dotnet-sdk-8.0 \
+    doxygen \
     dpkg-dev \
     file \
     git \
+    graphviz \
     jsonlint \
     libicu74 \
     make \
@@ -65,12 +68,42 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     nano \
     netbase \
     ninja-build \
-    npm \
+    openssh-client \
     python3 \
+    python3-click \
+    python3-dateutil \
+    python3-docopt \
+    python3-jsonschema \
+    python3-pip \
+    python3-pykwalify \
+    python3-requests \
+    python3-ruamel.yaml \
+    python3-venv \
     reuse \
+    sudo \
     yamllint \
     zlib1g \
   && rm -rf /var/lib/apt/lists/* \
-  && npm install -g \
-    @bazel/bazelisk \
-    @bazel/buildifier
+  && wget -q https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-${TARGETARCH:-amd64}.deb \
+  && dpkg -i bazelisk-${TARGETARCH:-amd64}.deb \
+  && rm -rf bazelisk-${TARGETARCH:-amd64}.deb \
+  && wget -qO /usr/local/bin/buildifier \
+    https://github.com/bazelbuild/buildtools/releases/latest/download/buildifier-linux-${TARGETARCH:-amd64} \
+  && wget -qO /usr/local/bin/buildozer \
+    https://github.com/bazelbuild/buildtools/releases/latest/download/buildozer-linux-${TARGETARCH:-amd64} \
+  && chmod +x \
+    /usr/local/bin/buildifier \
+    /usr/local/bin/buildozer \
+  && python3 -m venv --system-site-packages /home/ubuntu/.venv \
+  && . /home/ubuntu/.venv/bin/activate \
+  && pip install --no-cache-dir -qq \
+    cffconvert \
+  && echo "ubuntu ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/ubuntu \
+  && chmod 0440 /etc/sudoers.d/ubuntu
+ENV LOGNAME=ubuntu
+ENV PATH="/home/ubuntu/.venv/bin:${PATH}"
+ENV SHELL=/bin/bash
+ENV USER=ubuntu
+ENV VIRTUAL_ENV=/home/ubuntu/.venv
+USER ubuntu
+WORKDIR /workspace

@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Blocks/bin/Debug/net6.0/Blocks.dll",
+            "program": "${workspaceFolder}/Blocks/bin/Debug/net8.0/Blocks.dll",
             "cwd": "${workspaceFolder}/Blocks",
             "console": "internalConsole",
             "stopAtEntry": false
@@ -16,7 +16,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Circle/bin/Debug/net6.0/Circle.dll",
+            "program": "${workspaceFolder}/Circle/bin/Debug/net8.0/Circle.dll",
             "cwd": "${workspaceFolder}/Circle",
             "console": "internalConsole",
             "stopAtEntry": false

@@ -36,15 +36,14 @@
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary")
 
-package(default_applicable_licenses = ["//:license"])
-
-licenses(["notice"])  # Apache-2.0
+package(default_package_metadata = [
+    "//:license",
+    "//:package_info",
+])
 
 csharp_binary(
     name = "Circle.exe",
     srcs = ["Circle.cs"],
-    target_frameworks = ["net6.0"],
-    targeting_packs = ["@rules_dotnet_nuget_packages//microsoft.netcore.app.ref"],
-    visibility = ["//visibility:private"],
+    target_frameworks = ["net8.0"],
     deps = ["//RVOCS:RVOCS.dll"],
 )

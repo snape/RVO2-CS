@@ -51,8 +51,85 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
 jobs:
-  bazel_arch:
-    name: bazel arch latest
+  bazel-almalinux:
+    name: bazel almalinux amd64
+    runs-on: ubuntu-latest
+    container: almalinux:9
+    steps:
+      - name: pre-checkout setup
+        run: |
+          dnf makecache -q --refresh || (sleep 15; dnf makecache -q --refresh)
+          dnf upgrade -q -y
+          dnf install -q -y \
+            ca-certificates \
+            curl-minimal \
+            findutils \
+            gawk \
+            git \
+            gcc \
+            glibc-langpack-en \
+            gzip \
+            libicu \
+            lttng-ust \
+            tar \
+            zlib
+          dnf clean all
+          rm -rf /var/cache/yum
+          curl -sSLo /usr/local/bin/bazelisk \
+            https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64
+          chmod +x /usr/local/bin/bazelisk
+          ln -s /usr/local/bin/bazelisk /usr/local/bin/bazel
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: build package
+        run: bazel build ...
+        shell: bash
+
+  bazel-alpine:
+    name: bazel alpine linux amd64
+    runs-on: ubuntu-latest
+    container: alpine:3
+    steps:
+      - name: pre-checkout setup
+        run: |
+          apk upgrade -q --no-cache
+          apk add -q --no-cache \
+            bash \
+            ca-certificates \
+            curl \
+            gawk \
+            gcc \
+            git \
+            gzip \
+            icu \
+            libc6-compat \
+            lttng-ust \
+            python3 \
+            tar \
+            which \
+            zlib
+          curl -sSLo /usr/local/bin/bazelisk \
+            https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64
+          chmod +x /usr/local/bin/bazelisk
+          ln -s /usr/local/bin/bazelisk /usr/local/bin/bazel
+        shell: sh
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      # - name: build package
+      #   run: bazel build ...
+      #   shell: sh
+
+  bazel-arch:
+    name: bazel arch linux amd64
     runs-on: ubuntu-latest
     container: archlinux:latest
     steps:
@@ -62,11 +139,14 @@ jobs:
             bazel \
             ca-certificates \
             curl \
+            gawk \
             gcc \
             git \
+            gzip \
             icu \
             lttng-ust \
             python \
+            tar \
             which \
             zlib
           rm -rf \
@@ -83,30 +163,37 @@ jobs:
         run: bazel build ...
         shell: bash
 
-  bazel_macos:
-    name: bazel macos 14
-    runs-on: macos-14
+  bazel-fedora:
+    name: bazel fedora linux amd64
+    runs-on: ubuntu-latest
+    container: fedora:43
     steps:
       - name: pre-checkout setup
         run: |
-          brew update -q
-          brew upgrade -f -q
-          brew unlink -q bazelisk
-          brew install -q \
-            bazel \
-            buildifier \
+          dnf makecache -q --refresh || (sleep 15; dnf makecache -q --refresh)
+          dnf upgrade -q -y
+          dnf install -q -y \
+            ca-certificates \
+            curl \
+            findutils \
+            gawk \
+            gcc \
             git \
-            python \
-            jsonlint \
-            markdownlint-cli \
-            yamllint
-          brew cleanup -q -s
-          rm -rf $(brew --cache)
-        env:
-          HOMEBREW_NO_ANALYTICS: 1
-          HOMEBREW_NO_AUTO_UPDATE: 1
-          HOMEBREW_NO_INSTALL_CLEANUP: 1
-        shell: zsh -efuo pipefail {0}
+            glibc-langpack-en \
+            gzip \
+            libicu \
+            lttng-ust \
+            python3 \
+            tar \
+            which \
+            zlib
+            dnf clean all
+          rm -rf /var/cache/yum
+          curl -sSLo /usr/local/bin/bazelisk \
+            https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64
+          chmod +x /usr/local/bin/bazelisk
+          ln -s /usr/local/bin/bazelisk /usr/local/bin/bazel
+        shell: bash
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
@@ -115,12 +202,75 @@ jobs:
           global-json-file: global.json
       - name: build package
         run: bazel build ...
+        shell: bash
+
+  bazel-macos:
+    name: bazel macos arm64
+    runs-on: macos-15
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: pre-checkout setup
+        run: |
+          brew update -q
+          brew upgrade -f -q
+          brew bundle install -q
+          brew cleanup -q -s
+          rm -rf $(brew --cache)
+        env:
+          HOMEBREW_NO_ANALYTICS: 1
+          HOMEBREW_NO_AUTO_UPDATE: 1
+          HOMEBREW_NO_INSTALL_CLEANUP: 1
+        shell: zsh -efuo pipefail {0}
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: build package
+        run: bazel build ...
         shell: zsh -efuo pipefail {0}
 
-  bazel_ubuntu:
-    name: bazel ubuntu latest
+  bazel-opensuse:
+    name: bazel opensuse leap amd64
     runs-on: ubuntu-latest
-    container: ubuntu:latest
+    container: opensuse/leap:15
+    steps:
+      - name: pre-checkout setup
+        run: |
+          zypper -n -q ref || (sleep 15; zypper -n -q ref)
+          zypper -n -q up
+          zypper -n -q in --no-recommends \
+            ca-certificates \
+            curl \
+            findutils \
+            gawk \
+            gcc \
+            git \
+            gzip \
+            python3 \
+            tar \
+            which \
+            zlib
+          zypper -n -q cc -a
+          curl -sSLo /usr/local/bin/bazelisk \
+            https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64
+          chmod +x /usr/local/bin/bazelisk
+          ln -s /usr/local/bin/bazelisk /usr/local/bin/bazel
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: build package
+        run: bazel build ...
+        shell: bash
+
+  bazel-ubuntu:
+    name: bazel ubuntu amd64
+    runs-on: ubuntu-latest
+    container: ubuntu:24.04
     steps:
       - name: pre-checkout setup
         run: |
@@ -132,24 +282,20 @@ jobs:
               --no-install-recommends install \
             ca-certificates \
             curl \
-            g++ \
+            gawk \
+            gcc \
             git \
-            gnupg \
+            gzip \
             libicu74 \
             liblttng-ust1t64 \
             python-is-python3 \
+            tar \
             zlib1g
-          curl -sS https://bazel.build/bazel-release.pub.gpg | gpg --dearmor - \
-            > /usr/share/keyrings/bazel-archive-keyring.gpg
-          echo 'deb [signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8' \
-            > /etc/apt/sources.list.d/bazel.list
-          apt-get -qq -o APT::Acquire::Retries=4 update \
-            || (sleep 15; apt-get -qq -o APT::Acquire::Retries=4 update)
-          apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
-              --no-install-recommends install \
-            bazel
           apt-get -qq -o Dpkg::Use-Pty=0 autoremove
           rm -rf /var/lib/apt/lists/*
+          curl -sSLO https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-amd64.deb
+          dpkg -i bazelisk-amd64.deb
+          rm -rf bazelisk-amd64.deb
         env:
           DEBIAN_FRONTEND: noninteractive
         shell: bash
@@ -163,10 +309,93 @@ jobs:
         run: bazel build ...
         shell: bash
 
-  dotnet_alpine:
-    name: dotnet alpine latest
+  bazel-ubuntu-arm64:
+    name: bazel ubuntu arm64
+    runs-on: ubuntu-24.04-arm
+    container: ubuntu:24.04
+    steps:
+      - name: pre-checkout setup
+        run: |
+          apt-get -qq -o APT::Acquire::Retries=4 update \
+            || (sleep 15; apt-get -qq -o APT::Acquire::Retries=4 update)
+          apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
+            upgrade
+          apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
+              --no-install-recommends install \
+            ca-certificates \
+            curl \
+            gawk \
+            gcc \
+            git \
+            gzip \
+            libicu74 \
+            liblttng-ust1t64 \
+            python-is-python3 \
+            tar \
+            zlib1g
+          apt-get -qq -o Dpkg::Use-Pty=0 autoremove
+          rm -rf /var/lib/apt/lists/*
+          curl -sSLO https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-arm64.deb
+          dpkg -i bazelisk-arm64.deb
+          rm -rf bazelisk-arm64.deb
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: build package
+        run: bazel build ...
+        shell: bash
+
+  dotnet-almalinux:
+    name: dotnet almalinux amd64
     runs-on: ubuntu-latest
-    container: alpine:latest
+    container: almalinux:9
+    steps:
+      - name: pre-checkout setup
+        run: |
+          dnf makecache -q --refresh || (sleep 15; dnf makecache -q --refresh)
+          dnf upgrade -q -y
+          dnf install -q -y \
+            ca-certificates \
+            curl-minimal \
+            findutils \
+            gawk \
+            git \
+            glibc-langpack-en \
+            gzip \
+            libicu \
+            lttng-ust \
+            tar \
+            zlib
+          dnf clean all
+          rm -rf /var/cache/yum
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: build package debug
+        run: |
+          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+      - name: build package release
+        run: |
+          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+
+  dotnet-alpine:
+    name: dotnet alpine linux amd64
+    runs-on: ubuntu-latest
+    container: alpine:3
     steps:
       - name: pre-checkout setup
         run: |
@@ -175,9 +404,12 @@ jobs:
             bash \
             ca-certificates \
             curl \
+            gawk \
             git \
+            gzip \
             icu \
             lttng-ust \
+            tar \
             zlib
         shell: sh
       - name: checkout
@@ -197,8 +429,8 @@ jobs:
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: sh
 
-  dotnet_arch:
-    name: dotnet arch latest
+  dotnet-arch:
+    name: dotnet arch linux amd64
     runs-on: ubuntu-latest
     container: archlinux:latest
     steps:
@@ -207,9 +439,12 @@ jobs:
           pacman --needed --noconfirm --noprogressbar -S -u -y \
             ca-certificates \
             curl \
+            gawk \
             git \
+            gzip \
             icu \
             lttng-ust \
+            tar \
             zlib
           rm -rf \
             /var/cache/pacman/pkg/* \
@@ -232,10 +467,10 @@ jobs:
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
 
-  dotnet_fedora:
-    name: dotnet fedora latest
+  dotnet-fedora:
+    name: dotnet fedora linux amd64
     runs-on: ubuntu-latest
-    container: fedora:latest
+    container: fedora:43
     steps:
       - name: pre-checkout setup
         run: |
@@ -245,10 +480,13 @@ jobs:
             ca-certificates \
             curl \
             findutils \
+            gawk \
             git \
             glibc-langpack-en \
+            gzip \
             libicu \
             lttng-ust \
+            tar \
             zlib
           dnf clean all
           rm -rf /var/cache/yum
@@ -269,14 +507,25 @@ jobs:
           dotnet build --configuration Release --nologo RVOCS.sln
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
-
-  dotnet_macos:
-    name: dotnet macos 14
-    runs-on: macos-14
+  dotnet-macos:
+    name: dotnet macos arm64
+    runs-on: macos-15
     steps:
       - name: checkout
         uses: actions/checkout@v4
-      - name: setup
+      - name: pre-checkout setup
+        run: |
+          brew update -q
+          brew upgrade -f -q
+          brew bundle install -q
+          brew cleanup -q -s
+          rm -rf $(brew --cache)
+        env:
+          HOMEBREW_NO_ANALYTICS: 1
+          HOMEBREW_NO_AUTO_UPDATE: 1
+          HOMEBREW_NO_INSTALL_CLEANUP: 1
+        shell: zsh -efuo pipefail {0}
+      - name: post-checkout setup
         uses: actions/setup-dotnet@v4
         with:
           global-json-file: global.json
@@ -291,26 +540,25 @@ jobs:
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: zsh -efuo pipefail {0}
 
-  dotnet_rockylinux:
-    name: dotnet rockylinux 9
+  dotnet-opensuse:
+    name: dotnet opensuse leap amd64
     runs-on: ubuntu-latest
-    container: rockylinux:9
+    container: opensuse/leap:15
     steps:
       - name: pre-checkout setup
         run: |
-          dnf makecache -q --refresh || (sleep 15; dnf makecache -q --refresh)
-          dnf upgrade -q -y
-          dnf install -q -y \
+          zypper -n -q ref || (sleep 15; zypper -n -q ref)
+          zypper -n -q up
+          zypper -n -q in --no-recommends \
             ca-certificates \
-            curl-minimal \
+            curl \
             findutils \
+            gawk \
             git \
-            glibc-langpack-en \
-            libicu \
-            lttng-ust \
+            gzip \
+            tar \
             zlib
-          dnf clean all
-          rm -rf /var/cache/yum
+          zypper -n -q cc -a
         shell: bash
       - name: checkout
         uses: actions/checkout@v4
@@ -329,10 +577,10 @@ jobs:
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
 
-  dotnet_ubuntu:
-    name: dotnet ubuntu latest
+  dotnet-ubuntu:
+    name: dotnet ubuntu amd64
     runs-on: ubuntu-latest
-    container: ubuntu:latest
+    container: ubuntu:24.04
     steps:
       - name: pre-checkout setup
         run: |
@@ -344,9 +592,12 @@ jobs:
               --no-install-recommends install \
             ca-certificates \
             curl \
+            gawk \
             git \
+            gzip \
             libicu74 \
             liblttng-ust1t64 \
+            tar \
             zlib1g
           apt-get -qq -o Dpkg::Use-Pty=0 autoremove
           rm -rf /var/lib/apt/lists/*
@@ -378,8 +629,52 @@ jobs:
         shell: bash
         if: ${{ github.event.release.published }}
 
-  dotnet_windows:
-    name: dotnet windows latest
+  dotnet-ubuntu-arm64:
+    name: dotnet ubuntu arm64
+    runs-on: ubuntu-24.04-arm
+    container: ubuntu:24.04
+    steps:
+      - name: pre-checkout setup
+        run: |
+          apt-get -qq -o APT::Acquire::Retries=4 update \
+            || (sleep 15; apt-get -qq -o APT::Acquire::Retries=4 update)
+          apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
+            upgrade
+          apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
+              --no-install-recommends install \
+            ca-certificates \
+            curl \
+            gawk \
+            git \
+            gzip \
+            libicu74 \
+            liblttng-ust1t64 \
+            tar \
+            zlib1g
+          apt-get -qq -o Dpkg::Use-Pty=0 autoremove
+          rm -rf /var/lib/apt/lists/*
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: build package debug
+        run: |
+          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+      - name: build package release
+        run: |
+          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+
+  dotnet-windows:
+    name: dotnet windows amd64
     runs-on: windows-latest
     steps:
       - name: checkout

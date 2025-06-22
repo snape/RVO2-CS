@@ -37,9 +37,10 @@
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files")
 
-package(default_applicable_licenses = ["//:license"])
-
-licenses(["notice"])  # Apache-2.0
+package(default_package_metadata = [
+    "//:license",
+    "//:package_info",
+])
 
 csharp_library(
     name = "RVOCS.dll",
@@ -52,8 +53,7 @@ csharp_library(
         "Simulator.cs",
         "Vector2.cs",
     ],
-    target_frameworks = ["net6.0"],
-    targeting_packs = ["@rules_dotnet_nuget_packages//microsoft.netcore.app.ref"],
+    target_frameworks = ["net8.0"],
     visibility = ["//visibility:public"],
 )
 

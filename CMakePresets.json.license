@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-Blocks.csproj
+CMakePresets.json
 RVO2 Library C#
 
 SPDX-FileCopyrightText: 2008 University of North Carolina at Chapel Hill
@@ -30,17 +28,3 @@ Chapel Hill, N.C. 27599-3175
 United States of America
 
 <https://gamma.cs.unc.edu/RVO2/>
--->
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RVOCS\RVOCS.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="BUILD.bazel" />
-    <None Remove="CMakeLists.txt" />
-  </ItemGroup>
-</Project>

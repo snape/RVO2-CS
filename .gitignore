@@ -37,9 +37,12 @@
 /_build/
 /.idea/
 /.user.bazelrc
+/.venv/
 /.vs/
 /bazel-*
 /cmake-build-*/
+/CMakeUserPresets.json
+/MODULE.bazel.lock
 bin/
 html/
 obj/

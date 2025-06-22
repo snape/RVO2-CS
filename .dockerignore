@@ -43,3 +43,4 @@ _build/
 **/obj/
 bazel-*
 cmake-build-*/
+CMakeUserPresets.json

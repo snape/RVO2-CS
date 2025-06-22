@@ -34,7 +34,7 @@
 # <https://gamma.cs.unc.edu/RVO2/>
 #
 
-cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.26)
 project(RVOCS
   VERSION 2.1.0
   DESCRIPTION "Optimal Reciprocal Collision Avoidance for C#"
