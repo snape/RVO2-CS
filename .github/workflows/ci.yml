@@ -83,7 +83,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package
@@ -121,7 +121,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       # - name: build package
@@ -156,7 +156,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package
@@ -197,7 +197,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package
@@ -223,7 +223,7 @@ jobs:
           HOMEBREW_NO_INSTALL_CLEANUP: 1
         shell: zsh -efuo pipefail {0}
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package
@@ -260,7 +260,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package
@@ -302,7 +302,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package
@@ -344,7 +344,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package
@@ -378,7 +378,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package debug
@@ -415,7 +415,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package debug
@@ -453,7 +453,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package debug
@@ -494,7 +494,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package debug
@@ -526,7 +526,7 @@ jobs:
           HOMEBREW_NO_INSTALL_CLEANUP: 1
         shell: zsh -efuo pipefail {0}
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package debug
@@ -563,7 +563,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package debug
@@ -607,7 +607,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
           source-url: https://nuget.pkg.github.com/snape/index.json
@@ -659,7 +659,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package debug
@@ -680,7 +680,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: setup
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: build package debug
