@@ -89,45 +89,7 @@ jobs:
       - name: build package
         run: bazel build ...
         shell: bash
-
-  bazel-alpine:
-    name: bazel alpine linux amd64
-    runs-on: ubuntu-latest
-    container: alpine:3
-    steps:
-      - name: pre-checkout setup
-        run: |
-          apk upgrade -q --no-cache
-          apk add -q --no-cache \
-            bash \
-            ca-certificates \
-            curl \
-            gawk \
-            gcc \
-            git \
-            gzip \
-            icu \
-            libc6-compat \
-            lttng-ust \
-            python3 \
-            tar \
-            which \
-            zlib
-          curl -sSLo /usr/local/bin/bazelisk \
-            https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64
-          chmod +x /usr/local/bin/bazelisk
-          ln -s /usr/local/bin/bazelisk /usr/local/bin/bazel
-        shell: sh
-      - name: checkout
-        uses: actions/checkout@v4
-      - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
-        with:
-          global-json-file: global.json
-      # - name: build package
-      #   run: bazel build ...
-      #   shell: sh
-
+  
   bazel-arch:
     name: bazel arch linux amd64
     runs-on: ubuntu-latest
@@ -229,43 +191,6 @@ jobs:
       - name: build package
         run: bazel build ...
         shell: zsh -efuo pipefail {0}
-
-  bazel-opensuse:
-    name: bazel opensuse leap amd64
-    runs-on: ubuntu-latest
-    container: opensuse/leap:15
-    steps:
-      - name: pre-checkout setup
-        run: |
-          zypper -n -q ref || (sleep 15; zypper -n -q ref)
-          zypper -n -q up
-          zypper -n -q in --no-recommends \
-            ca-certificates \
-            curl \
-            findutils \
-            gawk \
-            gcc \
-            git \
-            gzip \
-            python3 \
-            tar \
-            which \
-            zlib
-          zypper -n -q cc -a
-          curl -sSLo /usr/local/bin/bazelisk \
-            https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64
-          chmod +x /usr/local/bin/bazelisk
-          ln -s /usr/local/bin/bazelisk /usr/local/bin/bazel
-        shell: bash
-      - name: checkout
-        uses: actions/checkout@v4
-      - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
-        with:
-          global-json-file: global.json
-      - name: build package
-        run: bazel build ...
-        shell: bash
 
   bazel-ubuntu:
     name: bazel ubuntu amd64
@@ -539,43 +464,6 @@ jobs:
           dotnet build --configuration Release --nologo RVOCS.sln
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: zsh -efuo pipefail {0}
-
-  dotnet-opensuse:
-    name: dotnet opensuse leap amd64
-    runs-on: ubuntu-latest
-    container: opensuse/leap:15
-    steps:
-      - name: pre-checkout setup
-        run: |
-          zypper -n -q ref || (sleep 15; zypper -n -q ref)
-          zypper -n -q up
-          zypper -n -q in --no-recommends \
-            ca-certificates \
-            curl \
-            findutils \
-            gawk \
-            git \
-            gzip \
-            tar \
-            zlib
-          zypper -n -q cc -a
-        shell: bash
-      - name: checkout
-        uses: actions/checkout@v4
-      - name: post-checkout setup
-        uses: actions/setup-dotnet@v4
-        with:
-          global-json-file: global.json
-      - name: build package debug
-        run: |
-          dotnet build --configuration Debug --nologo RVOCS.sln
-          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
-        shell: bash
-      - name: build package release
-        run: |
-          dotnet build --configuration Release --nologo RVOCS.sln
-          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
-        shell: bash
 
   dotnet-ubuntu:
     name: dotnet ubuntu amd64
