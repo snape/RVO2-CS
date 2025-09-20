@@ -49,7 +49,7 @@ register_toolchains("@dotnet_toolchains//:all")
 
 bazel_dep(name = "rules_license", version = "1.0.0")
 
-bazel_dep(name = "rules_python", version = "1.3.0", dev_dependency = True)
+bazel_dep(name = "rules_python", version = "1.6.1", dev_dependency = True)
 
 python = use_extension(
     "@rules_python//python/extensions:python.bzl",
