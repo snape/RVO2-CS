@@ -39,7 +39,6 @@ build --sandbox_default_allow_network=false
 
 build:macos --apple_platform_type=macos
 
-common --enable_bzlmod=true
 common --enable_platform_specific_config=true
 common --heap_dump_on_oom=true
 
