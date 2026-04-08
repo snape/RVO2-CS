@@ -171,9 +171,9 @@ namespace RVO
             {
                 Vector2 goalVector = goals[i] - Simulator.Instance.GetAgentPosition(i);
 
-                if (RVOMath.absSq(goalVector) > 1.0f)
+                if (RVOMath.AbsSq(goalVector) > 1.0f)
                 {
-                    goalVector = RVOMath.normalize(goalVector);
+                    goalVector = RVOMath.Normalize(goalVector);
                 }
 
                 Simulator.Instance.SetAgentPrefVelocity(i, goalVector);
@@ -192,7 +192,7 @@ namespace RVO
             /* Check if all agents have reached their goals. */
             for (int i = 0; i < Simulator.Instance.NumAgents; ++i)
             {
-                if (RVOMath.absSq(Simulator.Instance.GetAgentPosition(i) - goals[i]) > 400.0f)
+                if (RVOMath.AbsSq(Simulator.Instance.GetAgentPosition(i) - goals[i]) > 400.0f)
                 {
                     return false;
                 }
