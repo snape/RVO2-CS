@@ -138,6 +138,7 @@ namespace RVO
         /// this agent.</param>
         public int AddAgent(Vector2 position, float neighborDist, int maxNeighbors, float timeHorizon, float timeHorizonObst, float radius, float maxSpeed, Vector2 velocity)
         {
+            ArgumentOutOfRangeException.ThrowIfNegative(maxNeighbors, nameof(maxNeighbors));
             ArgumentOutOfRangeException.ThrowIfNegative(neighborDist, nameof(neighborDist));
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(timeHorizon, nameof(timeHorizon));
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(timeHorizonObst, nameof(timeHorizonObst));
@@ -556,7 +557,7 @@ namespace RVO
             ArgumentOutOfRangeException.ThrowIfNegative(agentNo, nameof(agentNo));
             ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(agentNo, _agents.Count, nameof(agentNo));
 
-            return _agents[agentNo]._orcaLines;
+            return new List<Line>(_agents[agentNo]._orcaLines);
         }
 
         /// <summary>Returns the ORCA constraints of the specified agent.
@@ -1019,6 +1020,7 @@ namespace RVO
         /// velocity of a new agent.</param>
         public void SetAgentDefaults(float neighborDist, int maxNeighbors, float timeHorizon, float timeHorizonObst, float radius, float maxSpeed, Vector2 velocity)
         {
+            ArgumentOutOfRangeException.ThrowIfNegative(maxNeighbors, nameof(maxNeighbors));
             ArgumentOutOfRangeException.ThrowIfNegative(neighborDist, nameof(neighborDist));
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(timeHorizon, nameof(timeHorizon));
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(timeHorizonObst, nameof(timeHorizonObst));

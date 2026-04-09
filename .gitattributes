@@ -52,7 +52,7 @@
 *.json               text whitespace-2
 *.license            text linguist-documentation whitespace-0
 *.md                 text diff=markdown whitespace-md
-*.sln                text eol=crlf linguist-generated whitespace=tabwidth=2,trailing-space
+*.slnx               text diff=html eol=crlf linguist-generated whitespace-2
 *.txt                text
 *.yaml               text whitespace-2
 *.yml                text whitespace-2

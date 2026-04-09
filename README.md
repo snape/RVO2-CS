@@ -74,7 +74,7 @@ avoidance approach on several dense and complex simulation scenarios workspaces
 involving thousands of agents, and compute collision-free actions for all of
 them in only a few milliseconds.
 
-RVO2 Library C# is an open-source C# .NET 6 implementation of our algorithm in
+RVO2 Library C# is an open-source C# .NET 10 implementation of our algorithm in
 two dimensions. It has a simple API for third-party applications. The user
 specifies static obstacles, agents, and the preferred velocities of the agents.
 The simulation is performed step-by-step via a simple call to the library. The

@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Blocks/Blocks.csproj" />
+  <Project Path="Circle/Circle.csproj" />
+  <Project Path="RVOCS/RVOCS.csproj" />
+</Solution>

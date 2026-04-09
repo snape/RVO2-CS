@@ -310,12 +310,12 @@ jobs:
           global-json-file: global.json
       - name: build package debug
         run: |
-          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet build --configuration Debug --nologo RVOCS.slnx
           dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
       - name: build package release
         run: |
-          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet build --configuration Release --nologo RVOCS.slnx
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
 
@@ -347,12 +347,12 @@ jobs:
           global-json-file: global.json
       - name: build package debug
         run: |
-          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet build --configuration Debug --nologo RVOCS.slnx
           dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
         shell: sh
       - name: build package release
         run: |
-          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet build --configuration Release --nologo RVOCS.slnx
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: sh
 
@@ -385,12 +385,12 @@ jobs:
           global-json-file: global.json
       - name: build package debug
         run: |
-          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet build --configuration Debug --nologo RVOCS.slnx
           dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
       - name: build package release
         run: |
-          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet build --configuration Release --nologo RVOCS.slnx
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
 
@@ -426,12 +426,12 @@ jobs:
           global-json-file: global.json
       - name: build package debug
         run: |
-          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet build --configuration Debug --nologo RVOCS.slnx
           dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
       - name: build package release
         run: |
-          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet build --configuration Release --nologo RVOCS.slnx
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
   dotnet-macos:
@@ -457,12 +457,12 @@ jobs:
           global-json-file: global.json
       - name: build package debug
         run: |
-          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet build --configuration Debug --nologo RVOCS.slnx
           dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
         shell: zsh -efuo pipefail {0}
       - name: build and pack release
         run: |
-          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet build --configuration Release --nologo RVOCS.slnx
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: zsh -efuo pipefail {0}
 
@@ -504,12 +504,12 @@ jobs:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: build package debug
         run: |
-          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet build --configuration Debug --nologo RVOCS.slnx
           dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
       - name: build package release
         run: |
-          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet build --configuration Release --nologo RVOCS.slnx
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
       - name: push
@@ -553,12 +553,12 @@ jobs:
           global-json-file: global.json
       - name: build package debug
         run: |
-          dotnet build --configuration Debug --nologo RVOCS.sln
+          dotnet build --configuration Debug --nologo RVOCS.slnx
           dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
       - name: build package release
         run: |
-          dotnet build --configuration Release --nologo RVOCS.sln
+          dotnet build --configuration Release --nologo RVOCS.slnx
           dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
         shell: bash
 
@@ -574,11 +574,11 @@ jobs:
           global-json-file: global.json
       - name: build package debug
         run: |
-          dotnet build --configuration Debug RVOCS.sln
+          dotnet build --configuration Debug RVOCS.slnx
           dotnet pack --configuration Debug --no-build RVOCS\RVOCS.csproj
         shell: pwsh
       - name: build and pack release
         run: |
-          dotnet build --configuration Release RVOCS.sln
+          dotnet build --configuration Release RVOCS.slnx
           dotnet pack --configuration Release --no-build RVOCS\RVOCS.csproj
         shell: pwsh
