@@ -171,7 +171,7 @@ jobs:
 
   bazel-macos:
     name: bazel macos arm64
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - name: checkout
         uses: actions/checkout@v6
@@ -436,7 +436,7 @@ jobs:
         shell: bash
   dotnet-macos:
     name: dotnet macos arm64
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - name: checkout
         uses: actions/checkout@v6
