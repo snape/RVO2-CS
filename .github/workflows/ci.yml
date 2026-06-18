@@ -81,7 +81,7 @@ jobs:
           ln -s /usr/local/bin/bazelisk /usr/local/bin/bazel
         shell: bash
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: post-checkout setup
         uses: actions/setup-dotnet@v5
         with:
@@ -119,7 +119,7 @@ jobs:
           ln -s /usr/local/bin/bazelisk /usr/local/bin/bazel
         shell: bash
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: post-checkout setup
         uses: actions/setup-dotnet@v5
         with:
@@ -160,7 +160,7 @@ jobs:
           ln -s /usr/local/bin/bazelisk /usr/local/bin/bazel
         shell: bash
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: post-checkout setup
         uses: actions/setup-dotnet@v5
         with:
@@ -174,7 +174,7 @@ jobs:
     runs-on: macos-26
     steps:
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: pre-checkout setup
         run: |
           brew update -q
@@ -227,7 +227,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         shell: bash
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: post-checkout setup
         uses: actions/setup-dotnet@v5
         with:
@@ -269,7 +269,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         shell: bash
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: post-checkout setup
         uses: actions/setup-dotnet@v5
         with:
@@ -303,7 +303,7 @@ jobs:
           rm -rf /var/cache/yum
         shell: bash
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: post-checkout setup
         uses: actions/setup-dotnet@v5
         with:
@@ -340,7 +340,7 @@ jobs:
             zlib
         shell: sh
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: post-checkout setup
         uses: actions/setup-dotnet@v5
         with:
@@ -378,7 +378,7 @@ jobs:
             /var/lib/pacman/sync/*
         shell: bash
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: post-checkout setup
         uses: actions/setup-dotnet@v5
         with:
@@ -419,7 +419,7 @@ jobs:
           rm -rf /var/cache/yum
         shell: bash
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: post-checkout setup
         uses: actions/setup-dotnet@v5
         with:
@@ -439,7 +439,7 @@ jobs:
     runs-on: macos-26
     steps:
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: pre-checkout setup
         run: |
           brew update -q
@@ -494,7 +494,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         shell: bash
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: post-checkout setup
         uses: actions/setup-dotnet@v5
         with:
@@ -546,7 +546,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         shell: bash
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: post-checkout setup
         uses: actions/setup-dotnet@v5
         with:
@@ -567,7 +567,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: setup
         uses: actions/setup-dotnet@v5
         with:
