@@ -42,7 +42,7 @@ module(
 bazel_dep(name = "rules_dotnet", version = "0.22.1")
 
 dotnet = use_extension("@rules_dotnet//dotnet:extensions.bzl", "dotnet")
-dotnet.toolchain(dotnet_version = "10.0.100")
+dotnet.toolchain(dotnet_version = "10.0.301")
 use_repo(dotnet, "dotnet_toolchains")
 
 register_toolchains("@dotnet_toolchains//:all")
