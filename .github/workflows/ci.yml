@@ -197,7 +197,7 @@ jobs:
   bazel-ubuntu:
     name: bazel ubuntu amd64
     runs-on: ubuntu-latest
-    container: ubuntu:24.04
+    container: ubuntu:26.04
     steps:
       - name: pre-checkout setup
         run: |
@@ -213,7 +213,7 @@ jobs:
             gcc \
             git \
             gzip \
-            libicu74 \
+            libicu78 \
             liblttng-ust1t64 \
             python-is-python3 \
             tar \
@@ -239,7 +239,7 @@ jobs:
   bazel-ubuntu-arm64:
     name: bazel ubuntu arm64
     runs-on: ubuntu-24.04-arm
-    container: ubuntu:24.04
+    container: ubuntu:26.04
     steps:
       - name: pre-checkout setup
         run: |
@@ -255,7 +255,7 @@ jobs:
             gcc \
             git \
             gzip \
-            libicu74 \
+            libicu78 \
             liblttng-ust1t64 \
             python-is-python3 \
             tar \
@@ -469,7 +469,7 @@ jobs:
   dotnet-ubuntu:
     name: dotnet ubuntu amd64
     runs-on: ubuntu-latest
-    container: ubuntu:24.04
+    container: ubuntu:26.04
     steps:
       - name: pre-checkout setup
         run: |
@@ -484,7 +484,7 @@ jobs:
             gawk \
             git \
             gzip \
-            libicu74 \
+            libicu78 \
             liblttng-ust1t64 \
             tar \
             zlib1g
@@ -521,7 +521,7 @@ jobs:
   dotnet-ubuntu-arm64:
     name: dotnet ubuntu arm64
     runs-on: ubuntu-24.04-arm
-    container: ubuntu:24.04
+    container: ubuntu:26.04
     steps:
       - name: pre-checkout setup
         run: |
@@ -536,7 +536,7 @@ jobs:
             gawk \
             git \
             gzip \
-            libicu74 \
+            libicu78 \
             liblttng-ust1t64 \
             tar \
             zlib1g
