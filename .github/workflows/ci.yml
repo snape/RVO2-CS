@@ -238,7 +238,7 @@ jobs:
 
   bazel-ubuntu-arm64:
     name: bazel ubuntu arm64
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     container: ubuntu:26.04
     steps:
       - name: pre-checkout setup
@@ -520,7 +520,7 @@ jobs:
 
   dotnet-ubuntu-arm64:
     name: dotnet ubuntu arm64
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     container: ubuntu:26.04
     steps:
       - name: pre-checkout setup
