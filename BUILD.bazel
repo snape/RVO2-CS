@@ -98,5 +98,6 @@ pkg_deb(
     package = "rvocs",
     priority = "optional",
     section = "contrib/libdevel",
+    target_compatible_with = ["@platforms//os:linux"],
     version = "2.1.0",
 )

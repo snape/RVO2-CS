@@ -45,5 +45,6 @@ csharp_binary(
     name = "Circle.exe",
     srcs = ["Circle.cs"],
     target_frameworks = ["net10.0"],
+    treat_warnings_as_errors = True,
     deps = ["//RVOCS:RVOCS.dll"],
 )

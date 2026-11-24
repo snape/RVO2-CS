@@ -54,6 +54,7 @@ csharp_library(
         "Vector2.cs",
     ],
     target_frameworks = ["net10.0"],
+    treat_warnings_as_errors = True,
     visibility = ["//visibility:public"],
 )
 
