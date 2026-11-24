@@ -41,7 +41,7 @@ United States of America
     <Title>RVO2 Library C#</Title>
     <Description>Optimal Reciprocal Collision Avoidance for C#</Description>
     <Copyright>2008 University of North Carolina at Chapel Hill</Copyright>
-    <PackageLicense>Apache-2.0</PackageLicense>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://gamma.cs.unc.edu/RVO2/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/snape/RVO2-CS</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
