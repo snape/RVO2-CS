@@ -244,8 +244,12 @@ namespace RVO
             if (end - begin > MAX_LEAF_SIZE)
             {
                 /* No leaf node. */
-                bool isVertical = _agentTree[node]._maxX - _agentTree[node]._minX > _agentTree[node]._maxY - _agentTree[node]._minY;
-                float splitValue = 0.5f * (isVertical ? _agentTree[node]._maxX + _agentTree[node]._minX : _agentTree[node]._maxY + _agentTree[node]._minY);
+                AgentTreeNode bounds = _agentTree[node];
+                bool isVertical = (double)bounds._maxX - bounds._minX >
+                    (double)bounds._maxY - bounds._minY;
+                float min = isVertical ? bounds._minX : bounds._minY;
+                float max = isVertical ? bounds._maxX : bounds._maxY;
+                float splitValue = (float)(0.5 * ((double)min + max));
 
                 int left = begin;
                 int right = end;
@@ -272,14 +276,13 @@ namespace RVO
                     }
                 }
 
-                int leftSize = left - begin;
-
-                if (leftSize == 0)
+                /* Split by index when the midpoint leaves one side empty. */
+                if (left == begin || left == end)
                 {
-                    ++leftSize;
-                    ++left;
+                    left = begin + (end - begin) / 2;
                 }
 
+                int leftSize = left - begin;
                 _agentTree[node]._left = node + 1;
                 _agentTree[node]._right = node + 2 * leftSize;
 
