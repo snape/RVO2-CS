@@ -50,13 +50,22 @@ on:  # yamllint disable-line rule:truthy
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   bazel-almalinux:
     name: bazel almalinux amd64
     runs-on: ubuntu-latest
     container: almalinux:10
+    timeout-minutes: 30
     steps:
       - name: pre-checkout setup
+        id: setup
         run: |
           dnf makecache -q --refresh || (sleep 15; dnf makecache -q --refresh)
           dnf upgrade -q -y
@@ -75,27 +84,47 @@ jobs:
             zlib
           dnf clean all
           rm -rf /var/cache/yum
-          curl -sSLo /usr/local/bin/bazelisk \
+          curl --retry 4 --retry-delay 15 -sSLo /usr/local/bin/bazelisk \
             https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64
           chmod +x /usr/local/bin/bazelisk
           ln -s /usr/local/bin/bazelisk /usr/local/bin/bazel
+          . /etc/os-release
+          echo "os=${ID}-${VERSION_ID:-rolling}" >> "$GITHUB_OUTPUT"
+          echo "gcc=$(gcc -dumpfullversion -dumpversion)" >> "$GITHUB_OUTPUT"
         shell: bash
       - name: checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: post-checkout setup
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
+      - name: cache bazel
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/bazel
+            ~/.cache/bazelisk
+          key: |
+            ${{ runner.os }}-${{ runner.arch }}-${{ steps.setup.outputs.os }}-gcc-${{ steps.setup.outputs.gcc }}-bazel-${{ hashFiles('.bazelversion', '.bazelrc', 'MODULE.bazel', '**/*.bazel', '**/*.bzl') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-${{ steps.setup.outputs.os }}-gcc-${{ steps.setup.outputs.gcc }}-bazel-
       - name: build package
-        run: bazel build ...
+        run: |
+          bazel build \
+            --features=treat_warnings_as_errors \
+            ...
         shell: bash
 
   bazel-arch:
     name: bazel arch linux amd64
     runs-on: ubuntu-latest
     container: archlinux:latest
+    timeout-minutes: 30
     steps:
       - name: pre-checkout setup
+        id: setup
         run: |
           pacman --needed --noconfirm --noprogressbar -S -u -y \
             ca-certificates \
@@ -113,27 +142,47 @@ jobs:
           rm -rf \
             /var/cache/pacman/pkg/* \
             /var/lib/pacman/sync/*
-          curl -sSLo /usr/local/bin/bazelisk \
+          curl --retry 4 --retry-delay 15 -sSLo /usr/local/bin/bazelisk \
             https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64
           chmod +x /usr/local/bin/bazelisk
           ln -s /usr/local/bin/bazelisk /usr/local/bin/bazel
+          . /etc/os-release
+          echo "os=${ID}-${VERSION_ID:-rolling}" >> "$GITHUB_OUTPUT"
+          echo "gcc=$(gcc -dumpfullversion -dumpversion)" >> "$GITHUB_OUTPUT"
         shell: bash
       - name: checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: post-checkout setup
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
+      - name: cache bazel
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/bazel
+            ~/.cache/bazelisk
+          key: |
+            ${{ runner.os }}-${{ runner.arch }}-${{ steps.setup.outputs.os }}-gcc-${{ steps.setup.outputs.gcc }}-bazel-${{ hashFiles('.bazelversion', '.bazelrc', 'MODULE.bazel', '**/*.bazel', '**/*.bzl') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-${{ steps.setup.outputs.os }}-gcc-${{ steps.setup.outputs.gcc }}-bazel-
       - name: build package
-        run: bazel build ...
+        run: |
+          bazel build \
+            --features=treat_warnings_as_errors \
+            ...
         shell: bash
 
   bazel-fedora:
     name: bazel fedora linux amd64
     runs-on: ubuntu-latest
     container: fedora:44
+    timeout-minutes: 30
     steps:
       - name: pre-checkout setup
+        id: setup
         run: |
           dnf makecache -q --refresh || (sleep 15; dnf makecache -q --refresh)
           dnf upgrade -q -y
@@ -154,52 +203,89 @@ jobs:
             zlib
             dnf clean all
           rm -rf /var/cache/yum
-          curl -sSLo /usr/local/bin/bazelisk \
+          curl --retry 4 --retry-delay 15 -sSLo /usr/local/bin/bazelisk \
             https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64
           chmod +x /usr/local/bin/bazelisk
           ln -s /usr/local/bin/bazelisk /usr/local/bin/bazel
+          . /etc/os-release
+          echo "os=${ID}-${VERSION_ID:-rolling}" >> "$GITHUB_OUTPUT"
+          echo "gcc=$(gcc -dumpfullversion -dumpversion)" >> "$GITHUB_OUTPUT"
         shell: bash
       - name: checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: post-checkout setup
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
+      - name: cache bazel
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/bazel
+            ~/.cache/bazelisk
+          key: |
+            ${{ runner.os }}-${{ runner.arch }}-${{ steps.setup.outputs.os }}-gcc-${{ steps.setup.outputs.gcc }}-bazel-${{ hashFiles('.bazelversion', '.bazelrc', 'MODULE.bazel', '**/*.bazel', '**/*.bzl') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-${{ steps.setup.outputs.os }}-gcc-${{ steps.setup.outputs.gcc }}-bazel-
       - name: build package
-        run: bazel build ...
+        run: |
+          bazel build \
+            --features=treat_warnings_as_errors \
+            ...
         shell: bash
 
   bazel-macos:
     name: bazel macos arm64
     runs-on: macos-26
+    timeout-minutes: 30
     steps:
-      - name: checkout
-        uses: actions/checkout@v7
       - name: pre-checkout setup
         run: |
-          brew update -q
-          brew bundle install -q
-          brew cleanup -q -s
-          rm -rf $(brew --cache)
+          brew update -q || (sleep 15; brew update -q)
+          brew install -q \
+            bazelisk \
+            git
         env:
+          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_NO_ANALYTICS: 1
           HOMEBREW_NO_AUTO_UPDATE: 1
           HOMEBREW_NO_INSTALL_CLEANUP: 1
         shell: zsh -efuo pipefail {0}
+      - name: checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: post-checkout setup
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
+      - name: cache bazel
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/Library/Caches/bazel
+            ~/Library/Caches/bazelisk
+          key: |
+            ${{ runner.os }}-${{ runner.arch }}-bazel-${{ hashFiles('.bazelversion', '.bazelrc', 'MODULE.bazel', '**/*.bazel', '**/*.bzl') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-bazel-
       - name: build package
-        run: bazel build ...
+        run: |
+          bazel build \
+            --features=treat_warnings_as_errors \
+            ...
         shell: zsh -efuo pipefail {0}
 
   bazel-ubuntu:
     name: bazel ubuntu amd64
     runs-on: ubuntu-latest
     container: ubuntu:26.04
+    timeout-minutes: 30
     steps:
       - name: pre-checkout setup
+        id: setup
         run: |
           apt-get -qq -o APT::Acquire::Retries=4 update \
             || (sleep 15; apt-get -qq -o APT::Acquire::Retries=4 update)
@@ -220,28 +306,48 @@ jobs:
             zlib1g
           apt-get -qq -o Dpkg::Use-Pty=0 autoremove
           rm -rf /var/lib/apt/lists/*
-          curl -sSLO https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-amd64.deb
+          curl --retry 4 --retry-delay 15 -sSLO https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-amd64.deb
           dpkg -i bazelisk-amd64.deb
           rm -rf bazelisk-amd64.deb
+          . /etc/os-release
+          echo "os=${ID}-${VERSION_ID:-rolling}" >> "$GITHUB_OUTPUT"
+          echo "gcc=$(gcc -dumpfullversion -dumpversion)" >> "$GITHUB_OUTPUT"
         env:
           DEBIAN_FRONTEND: noninteractive
         shell: bash
       - name: checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: post-checkout setup
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
+      - name: cache bazel
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/bazel
+            ~/.cache/bazelisk
+          key: |
+            ${{ runner.os }}-${{ runner.arch }}-${{ steps.setup.outputs.os }}-gcc-${{ steps.setup.outputs.gcc }}-bazel-${{ hashFiles('.bazelversion', '.bazelrc', 'MODULE.bazel', '**/*.bazel', '**/*.bzl') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-${{ steps.setup.outputs.os }}-gcc-${{ steps.setup.outputs.gcc }}-bazel-
       - name: build package
-        run: bazel build ...
+        run: |
+          bazel build \
+            --features=treat_warnings_as_errors \
+            ...
         shell: bash
 
   bazel-ubuntu-arm64:
     name: bazel ubuntu arm64
     runs-on: ubuntu-26.04-arm
     container: ubuntu:26.04
+    timeout-minutes: 30
     steps:
       - name: pre-checkout setup
+        id: setup
         run: |
           apt-get -qq -o APT::Acquire::Retries=4 update \
             || (sleep 15; apt-get -qq -o APT::Acquire::Retries=4 update)
@@ -262,26 +368,197 @@ jobs:
             zlib1g
           apt-get -qq -o Dpkg::Use-Pty=0 autoremove
           rm -rf /var/lib/apt/lists/*
-          curl -sSLO https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-arm64.deb
+          curl --retry 4 --retry-delay 15 -sSLO https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-arm64.deb
           dpkg -i bazelisk-arm64.deb
           rm -rf bazelisk-arm64.deb
+          . /etc/os-release
+          echo "os=${ID}-${VERSION_ID:-rolling}" >> "$GITHUB_OUTPUT"
+          echo "gcc=$(gcc -dumpfullversion -dumpversion)" >> "$GITHUB_OUTPUT"
         env:
           DEBIAN_FRONTEND: noninteractive
         shell: bash
       - name: checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: post-checkout setup
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
+      - name: cache bazel
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/bazel
+            ~/.cache/bazelisk
+          key: |
+            ${{ runner.os }}-${{ runner.arch }}-${{ steps.setup.outputs.os }}-gcc-${{ steps.setup.outputs.gcc }}-bazel-${{ hashFiles('.bazelversion', '.bazelrc', 'MODULE.bazel', '**/*.bazel', '**/*.bzl') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-${{ steps.setup.outputs.os }}-gcc-${{ steps.setup.outputs.gcc }}-bazel-
       - name: build package
-        run: bazel build ...
+        run: |
+          bazel build \
+            --features=treat_warnings_as_errors \
+            ...
         shell: bash
+
+  bazel-windows:
+    name: bazel windows x64
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: setup
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $moduleInstalled = $false
+          for ($i = 1; $i -le 3; $i++) {
+            try {
+              if (-not $moduleInstalled) {
+                Install-Module -Force -Name Microsoft.WinGet.Client
+                $moduleInstalled = $true
+              }
+              $package = Get-WinGetPackage -Id Bazel.Bazelisk `
+                -MatchOption Equals -ErrorAction SilentlyContinue
+              if (-not $package) {
+                $result = Install-WinGetPackage -Id Bazel.Bazelisk `
+                  -MatchOption Equals -Mode Silent
+                if ($result.Status -ne 'Ok') { throw "WinGet install failed: $($result.Status)" }
+              } elseif ($package.IsUpdateAvailable) {
+                $result = Update-WinGetPackage -Id Bazel.Bazelisk `
+                  -MatchOption Equals -Mode Silent
+                if ($result.Status -ne 'Ok') { throw "WinGet update failed: $($result.Status)" }
+              }
+              $package = Get-WinGetPackage -Id Git.Git `
+                -MatchOption Equals -ErrorAction SilentlyContinue
+              if (-not $package) {
+                $result = Install-WinGetPackage -Id Git.Git `
+                  -MatchOption Equals -Mode Silent
+                if ($result.Status -ne 'Ok') { throw "WinGet install failed: $($result.Status)" }
+              } elseif ($package.IsUpdateAvailable) {
+                $result = Update-WinGetPackage -Id Git.Git `
+                  -MatchOption Equals -Mode Silent
+                if ($result.Status -ne 'Ok') { throw "WinGet update failed: $($result.Status)" }
+              }
+              break
+            } catch {
+              if ($i -eq 3) { throw }
+              if ($moduleInstalled) { try { Repair-WinGetPackageManager -Force -Latest } catch {} }
+              Start-Sleep -Seconds 15
+            }
+          }
+          Add-Content $env:GITHUB_PATH (
+            [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + `
+            [System.Environment]::GetEnvironmentVariable("Path", "User"))
+        shell: pwsh
+      - name: checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: cache bazel
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~\AppData\Local\bazel-cache
+            ~\AppData\Local\bazelisk
+          key: |
+            ${{ runner.os }}-${{ runner.arch }}-bazel-${{ hashFiles('.bazelversion', '.bazelrc', 'MODULE.bazel', '**/*.bazel', '**/*.bzl') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-bazel-
+      - name: build package
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          bazelisk build `
+            --disk_cache="$env:LOCALAPPDATA\bazel-cache\disk" `
+            --features=treat_warnings_as_errors `
+            --repository_cache="$env:LOCALAPPDATA\bazel-cache\repo" `
+            ...
+        shell: pwsh
+
+  bazel-windows-arm64:
+    name: bazel windows arm64
+    runs-on: windows-11-arm
+    timeout-minutes: 30
+    steps:
+      - name: setup
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $moduleInstalled = $false
+          for ($i = 1; $i -le 3; $i++) {
+            try {
+              if (-not $moduleInstalled) {
+                Install-Module -Force -Name Microsoft.WinGet.Client
+                $moduleInstalled = $true
+              }
+              $bazeliskDir = Join-Path $env:LOCALAPPDATA 'Programs\bazelisk'
+              $bazeliskExe = Join-Path $bazeliskDir 'bazelisk.exe'
+              if (-not (Test-Path $bazeliskExe)) {
+                $bazeliskTmp = "$bazeliskExe.tmp"
+                New-Item -ItemType Directory -Force -Path $bazeliskDir | Out-Null
+                Invoke-WebRequest `
+                  -Uri https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-windows-arm64.exe `
+                  -OutFile $bazeliskTmp
+                Move-Item -Force $bazeliskTmp $bazeliskExe
+              }
+              $package = Get-WinGetPackage -Id Git.Git `
+                -MatchOption Equals -ErrorAction SilentlyContinue
+              if (-not $package) {
+                $result = Install-WinGetPackage -Id Git.Git `
+                  -MatchOption Equals -Mode Silent
+                if ($result.Status -ne 'Ok') { throw "WinGet install failed: $($result.Status)" }
+              } elseif ($package.IsUpdateAvailable) {
+                $result = Update-WinGetPackage -Id Git.Git `
+                  -MatchOption Equals -Mode Silent
+                if ($result.Status -ne 'Ok') { throw "WinGet update failed: $($result.Status)" }
+              }
+              break
+            } catch {
+              if ($i -eq 3) { throw }
+              if ($moduleInstalled) { try { Repair-WinGetPackageManager -Force -Latest } catch {} }
+              Start-Sleep -Seconds 15
+            }
+          }
+          Add-Content $env:GITHUB_PATH (
+            [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + `
+            [System.Environment]::GetEnvironmentVariable("Path", "User"))
+          Add-Content $env:GITHUB_PATH (Join-Path $env:LOCALAPPDATA 'Programs\bazelisk')
+        shell: pwsh
+      - name: checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: cache bazel
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~\AppData\Local\bazel-cache
+            ~\AppData\Local\bazelisk
+          key: |
+            ${{ runner.os }}-${{ runner.arch }}-bazel-${{ hashFiles('.bazelversion', '.bazelrc', 'MODULE.bazel', '**/*.bazel', '**/*.bzl') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-bazel-
+      - name: build package
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          bazelisk build `
+            --disk_cache="$env:LOCALAPPDATA\bazel-cache\disk" `
+            --features=treat_warnings_as_errors `
+            --repository_cache="$env:LOCALAPPDATA\bazel-cache\repo" `
+            ...
+        shell: pwsh
 
   dotnet-almalinux:
     name: dotnet almalinux amd64
     runs-on: ubuntu-latest
     container: almalinux:10
+    timeout-minutes: 30
     steps:
       - name: pre-checkout setup
         run: |
@@ -304,10 +581,18 @@ jobs:
         shell: bash
       - name: checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: post-checkout setup
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.slnx
@@ -323,11 +608,12 @@ jobs:
     name: dotnet alpine linux amd64
     runs-on: ubuntu-latest
     container: alpine:3
+    timeout-minutes: 30
     steps:
       - name: pre-checkout setup
         run: |
-          apk upgrade -q --no-cache
-          apk add -q --no-cache \
+          apk upgrade -q --no-cache || (sleep 15; apk upgrade -q --no-cache)
+          (apk add -q --no-cache \
             bash \
             ca-certificates \
             curl \
@@ -337,14 +623,32 @@ jobs:
             icu \
             lttng-ust \
             tar \
-            zlib
+            zlib) || (sleep 15; apk add -q --no-cache \
+            bash \
+            ca-certificates \
+            curl \
+            gawk \
+            git \
+            gzip \
+            icu \
+            lttng-ust \
+            tar \
+            zlib)
         shell: sh
       - name: checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: post-checkout setup
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.slnx
@@ -360,6 +664,7 @@ jobs:
     name: dotnet arch linux amd64
     runs-on: ubuntu-latest
     container: archlinux:latest
+    timeout-minutes: 30
     steps:
       - name: pre-checkout setup
         run: |
@@ -379,10 +684,18 @@ jobs:
         shell: bash
       - name: checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: post-checkout setup
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.slnx
@@ -398,6 +711,7 @@ jobs:
     name: dotnet fedora linux amd64
     runs-on: ubuntu-latest
     container: fedora:44
+    timeout-minutes: 30
     steps:
       - name: pre-checkout setup
         run: |
@@ -420,10 +734,18 @@ jobs:
         shell: bash
       - name: checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: post-checkout setup
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.slnx
@@ -437,24 +759,22 @@ jobs:
   dotnet-macos:
     name: dotnet macos arm64
     runs-on: macos-26
+    timeout-minutes: 30
     steps:
       - name: checkout
         uses: actions/checkout@v7
-      - name: pre-checkout setup
-        run: |
-          brew update -q
-          brew bundle install -q
-          brew cleanup -q -s
-          rm -rf $(brew --cache)
-        env:
-          HOMEBREW_NO_ANALYTICS: 1
-          HOMEBREW_NO_AUTO_UPDATE: 1
-          HOMEBREW_NO_INSTALL_CLEANUP: 1
-        shell: zsh -efuo pipefail {0}
-      - name: post-checkout setup
+        with:
+          persist-credentials: false
+      - name: setup
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.slnx
@@ -470,6 +790,7 @@ jobs:
     name: dotnet ubuntu amd64
     runs-on: ubuntu-latest
     container: ubuntu:26.04
+    timeout-minutes: 30
     steps:
       - name: pre-checkout setup
         run: |
@@ -495,6 +816,8 @@ jobs:
         shell: bash
       - name: checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: post-checkout setup
         uses: actions/setup-dotnet@v6
         with:
@@ -522,6 +845,7 @@ jobs:
     name: dotnet ubuntu arm64
     runs-on: ubuntu-26.04-arm
     container: ubuntu:26.04
+    timeout-minutes: 30
     steps:
       - name: pre-checkout setup
         run: |
@@ -547,10 +871,18 @@ jobs:
         shell: bash
       - name: checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: post-checkout setup
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
       - name: build package debug
         run: |
           dotnet build --configuration Debug --nologo RVOCS.slnx
@@ -565,20 +897,63 @@ jobs:
   dotnet-windows:
     name: dotnet windows amd64
     runs-on: windows-latest
+    timeout-minutes: 30
     steps:
       - name: checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: setup
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~\.nuget\packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
       - name: build package debug
         run: |
+          $PSNativeCommandUseErrorActionPreference = $true
           dotnet build --configuration Debug RVOCS.slnx
           dotnet pack --configuration Debug --no-build RVOCS\RVOCS.csproj
         shell: pwsh
       - name: build and pack release
         run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          dotnet build --configuration Release RVOCS.slnx
+          dotnet pack --configuration Release --no-build RVOCS\RVOCS.csproj
+        shell: pwsh
+
+  dotnet-windows-arm64:
+    name: dotnet windows arm64
+    runs-on: windows-11-arm
+    timeout-minutes: 30
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: setup
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~\.nuget\packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
+      - name: build package debug
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          dotnet build --configuration Debug RVOCS.slnx
+          dotnet pack --configuration Debug --no-build RVOCS\RVOCS.csproj
+        shell: pwsh
+      - name: build and pack release
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
           dotnet build --configuration Release RVOCS.slnx
           dotnet pack --configuration Release --no-build RVOCS\RVOCS.csproj
         shell: pwsh
