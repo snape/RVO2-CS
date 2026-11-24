@@ -962,7 +962,7 @@ namespace RVO
         {
             ArgumentOutOfRangeException.ThrowIfNegative(radius, nameof(radius));
 
-            if (RVOMath.AbsSq(point2 - point1) <= RVOMath.RVO_EPSILON * RVOMath.RVO_EPSILON)
+            if (point1 == point2)
             {
                 return true;
             }

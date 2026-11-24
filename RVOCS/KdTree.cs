@@ -559,10 +559,10 @@ namespace RVO
             Obstacle obstacle1 = node._obstacle;
             Obstacle obstacle2 = obstacle1._next;
 
-            float q1LeftOfI = RVOMath.LeftOf(obstacle1._point, obstacle2._point, q1);
-            float q2LeftOfI = RVOMath.LeftOf(obstacle1._point, obstacle2._point, q2);
-            float invLengthI = 1.0f / RVOMath.AbsSq(obstacle2._point - obstacle1._point);
-            float radiusSq = radius * radius;
+            double q1LeftOfI = VisibilitySide(obstacle1._point, obstacle2._point, q1);
+            double q2LeftOfI = VisibilitySide(obstacle1._point, obstacle2._point, q2);
+            double invLengthI = 1.0 / VisibilityLengthSq(obstacle1._point, obstacle2._point);
+            double radiusSq = (double)radius * radius;
 
             if (q1LeftOfI >= 0.0f && q2LeftOfI >= 0.0f)
             {
@@ -580,11 +580,25 @@ namespace RVO
                 return QueryVisibilityRecursive(q1, q2, radius, node._left) && QueryVisibilityRecursive(q1, q2, radius, node._right);
             }
 
-            float point1LeftOfQ = RVOMath.LeftOf(q1, q2, obstacle1._point);
-            float point2LeftOfQ = RVOMath.LeftOf(q1, q2, obstacle2._point);
-            float invLengthQ = 1.0f / RVOMath.AbsSq(q2 - q1);
+            double point1LeftOfQ = VisibilitySide(q1, q2, obstacle1._point);
+            double point2LeftOfQ = VisibilitySide(q1, q2, obstacle2._point);
+            double invLengthQ = 1.0 / VisibilityLengthSq(q1, q2);
 
             return point1LeftOfQ * point2LeftOfQ >= 0.0f && point1LeftOfQ * point1LeftOfQ * invLengthQ > radiusSq && point2LeftOfQ * point2LeftOfQ * invLengthQ > radiusSq && QueryVisibilityRecursive(q1, q2, radius, node._left) && QueryVisibilityRecursive(q1, q2, radius, node._right);
+        }
+
+        private static double VisibilitySide(Vector2 a, Vector2 b, Vector2 point)
+        {
+            double x = (double)b.X - a.X;
+            double y = (double)b.Y - a.Y;
+            return x * ((double)point.Y - a.Y) - y * ((double)point.X - a.X);
+        }
+
+        private static double VisibilityLengthSq(Vector2 a, Vector2 b)
+        {
+            double x = (double)b.X - a.X;
+            double y = (double)b.Y - a.Y;
+            return x * x + y * y;
         }
     }
 }
