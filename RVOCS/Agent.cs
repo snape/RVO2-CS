@@ -258,15 +258,17 @@ namespace RVO
                 Vector2 leftCutOff = invTimeHorizonObst * (obstacle1._point - _position);
                 Vector2 rightCutOff = invTimeHorizonObst * (obstacle2._point - _position);
                 Vector2 cutOffVector = rightCutOff - leftCutOff;
+                float cutOffLengthSq = RVOMath.AbsSq(cutOffVector);
+                bool isPointCutOff = obstacle1 == obstacle2 || cutOffLengthSq == 0.0f;
 
                 /* Project current velocity on velocity obstacle. */
 
                 /* Check if current velocity is projected on cutoff circles. */
-                float t = obstacle1 == obstacle2 ? 0.5f : ((_velocity - leftCutOff) * cutOffVector) / RVOMath.AbsSq(cutOffVector);
+                float t = isPointCutOff ? 0.5f : ((_velocity - leftCutOff) * cutOffVector) / cutOffLengthSq;
                 float tLeft = (_velocity - leftCutOff) * leftLegDirection;
                 float tRight = (_velocity - rightCutOff) * rightLegDirection;
 
-                if ((t < 0.0f && tLeft < 0.0f) || (obstacle1 == obstacle2 && tLeft < 0.0f && tRight < 0.0f))
+                if ((t < 0.0f && tLeft < 0.0f) || (isPointCutOff && tLeft < 0.0f && tRight < 0.0f))
                 {
                     /* Project on left cut-off circle. */
                     Vector2 unitW = RVOMath.Normalize(_velocity - leftCutOff);
@@ -293,7 +295,7 @@ namespace RVO
                  * Project on left leg, right leg, or cut-off line, whichever is
                  * closest to velocity.
                  */
-                float distSqCutoff = (t < 0.0f || t > 1.0f || obstacle1 == obstacle2) ? float.PositiveInfinity : RVOMath.AbsSq(_velocity - (leftCutOff + t * cutOffVector));
+                float distSqCutoff = (t < 0.0f || t > 1.0f || isPointCutOff) ? float.PositiveInfinity : RVOMath.AbsSq(_velocity - (leftCutOff + t * cutOffVector));
                 float distSqLeft = tLeft < 0.0f ? float.PositiveInfinity : RVOMath.AbsSq(_velocity - (leftCutOff + tLeft * leftLegDirection));
                 float distSqRight = tRight < 0.0f ? float.PositiveInfinity : RVOMath.AbsSq(_velocity - (rightCutOff + tRight * rightLegDirection));
 

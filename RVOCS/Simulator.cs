@@ -139,11 +139,11 @@ namespace RVO
         public int AddAgent(Vector2 position, float neighborDist, int maxNeighbors, float timeHorizon, float timeHorizonObst, float radius, float maxSpeed, Vector2 velocity)
         {
             ArgumentOutOfRangeException.ThrowIfNegative(maxNeighbors, nameof(maxNeighbors));
-            ArgumentOutOfRangeException.ThrowIfNegative(neighborDist, nameof(neighborDist));
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(timeHorizon, nameof(timeHorizon));
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(timeHorizonObst, nameof(timeHorizonObst));
-            ArgumentOutOfRangeException.ThrowIfNegative(radius, nameof(radius));
-            ArgumentOutOfRangeException.ThrowIfNegative(maxSpeed, nameof(maxSpeed));
+            ThrowIfNegativeOrNaN(neighborDist, nameof(neighborDist));
+            ThrowIfNegativeOrZeroOrNaN(timeHorizon, nameof(timeHorizon));
+            ThrowIfNegativeOrZeroOrNaN(timeHorizonObst, nameof(timeHorizonObst));
+            ThrowIfNegativeOrNotFinite(radius, nameof(radius));
+            ThrowIfNegativeOrNotFinite(maxSpeed, nameof(maxSpeed));
 
             Agent agent = new();
             agent._id = _agents.Count;
@@ -904,10 +904,7 @@ namespace RVO
             get => _timeStep;
             set
             {
-                if (!float.IsFinite(value) || value <= 0.0f)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(value), value, "The time step must be finite and positive.");
-                }
+                ThrowIfNegativeOrZeroOrNotFinite(value, nameof(value));
 
                 _timeStep = value;
             }
@@ -963,7 +960,7 @@ namespace RVO
         /// mutually visible (optional). Must be non-negative.</param>
         public bool QueryVisibility(Vector2 point1, Vector2 point2, float radius)
         {
-            ArgumentOutOfRangeException.ThrowIfNegative(radius, nameof(radius));
+            ThrowIfNegativeOrNotFinite(radius, nameof(radius));
 
             if (RVOMath.AbsSq(point2 - point1) <= RVOMath.RVO_EPSILON * RVOMath.RVO_EPSILON)
             {
@@ -1024,11 +1021,11 @@ namespace RVO
         public void SetAgentDefaults(float neighborDist, int maxNeighbors, float timeHorizon, float timeHorizonObst, float radius, float maxSpeed, Vector2 velocity)
         {
             ArgumentOutOfRangeException.ThrowIfNegative(maxNeighbors, nameof(maxNeighbors));
-            ArgumentOutOfRangeException.ThrowIfNegative(neighborDist, nameof(neighborDist));
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(timeHorizon, nameof(timeHorizon));
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(timeHorizonObst, nameof(timeHorizonObst));
-            ArgumentOutOfRangeException.ThrowIfNegative(radius, nameof(radius));
-            ArgumentOutOfRangeException.ThrowIfNegative(maxSpeed, nameof(maxSpeed));
+            ThrowIfNegativeOrNaN(neighborDist, nameof(neighborDist));
+            ThrowIfNegativeOrZeroOrNaN(timeHorizon, nameof(timeHorizon));
+            ThrowIfNegativeOrZeroOrNaN(timeHorizonObst, nameof(timeHorizonObst));
+            ThrowIfNegativeOrNotFinite(radius, nameof(radius));
+            ThrowIfNegativeOrNotFinite(maxSpeed, nameof(maxSpeed));
 
             if (_defaultAgent is null)
             {
@@ -1119,7 +1116,7 @@ namespace RVO
         {
             ArgumentOutOfRangeException.ThrowIfNegative(agentNo, nameof(agentNo));
             ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(agentNo, _agents.Count, nameof(agentNo));
-            ArgumentOutOfRangeException.ThrowIfNegative(maxSpeed, nameof(maxSpeed));
+            ThrowIfNegativeOrNotFinite(maxSpeed, nameof(maxSpeed));
 
             _agents[agentNo]._maxSpeed = maxSpeed;
         }
@@ -1147,7 +1144,7 @@ namespace RVO
         {
             ArgumentOutOfRangeException.ThrowIfNegative(agentNo, nameof(agentNo));
             ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(agentNo, _agents.Count, nameof(agentNo));
-            ArgumentOutOfRangeException.ThrowIfNegative(neighborDist, nameof(neighborDist));
+            ThrowIfNegativeOrNaN(neighborDist, nameof(neighborDist));
 
             _agents[agentNo]._neighborDist = neighborDist;
         }
@@ -1231,7 +1228,7 @@ namespace RVO
         {
             ArgumentOutOfRangeException.ThrowIfNegative(agentNo, nameof(agentNo));
             ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(agentNo, _agents.Count, nameof(agentNo));
-            ArgumentOutOfRangeException.ThrowIfNegative(radius, nameof(radius));
+            ThrowIfNegativeOrNotFinite(radius, nameof(radius));
 
             _agents[agentNo]._radius = radius;
         }
@@ -1259,7 +1256,7 @@ namespace RVO
         {
             ArgumentOutOfRangeException.ThrowIfNegative(agentNo, nameof(agentNo));
             ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(agentNo, _agents.Count, nameof(agentNo));
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(timeHorizon, nameof(timeHorizon));
+            ThrowIfNegativeOrZeroOrNaN(timeHorizon, nameof(timeHorizon));
 
             _agents[agentNo]._timeHorizon = timeHorizon;
         }
@@ -1288,7 +1285,7 @@ namespace RVO
         {
             ArgumentOutOfRangeException.ThrowIfNegative(agentNo, nameof(agentNo));
             ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(agentNo, _agents.Count, nameof(agentNo));
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(timeHorizonObst, nameof(timeHorizonObst));
+            ThrowIfNegativeOrZeroOrNaN(timeHorizonObst, nameof(timeHorizonObst));
 
             _agents[agentNo]._timeHorizonObst = timeHorizonObst;
         }
@@ -1339,7 +1336,44 @@ namespace RVO
         /// <param name="globalTime">The global time of the simulation.</param>
         public void SetGlobalTime(float globalTime)
         {
+            if (!float.IsFinite(globalTime))
+            {
+                throw new ArgumentOutOfRangeException(nameof(globalTime), globalTime, "The global time must be finite.");
+            }
+
             _globalTime = globalTime;
+        }
+
+        private static void ThrowIfNegativeOrNotFinite(float value, string paramName)
+        {
+            if (!float.IsFinite(value) || value < 0.0f)
+            {
+                throw new ArgumentOutOfRangeException(paramName, value, "Value must be finite and non-negative.");
+            }
+        }
+
+        private static void ThrowIfNegativeOrNaN(float value, string paramName)
+        {
+            if (float.IsNaN(value) || value < 0.0f)
+            {
+                throw new ArgumentOutOfRangeException(paramName, value, "Value must be non-negative and not NaN.");
+            }
+        }
+
+        private static void ThrowIfNegativeOrZeroOrNotFinite(float value, string paramName)
+        {
+            if (!float.IsFinite(value) || value <= 0.0f)
+            {
+                throw new ArgumentOutOfRangeException(paramName, value, "Value must be finite and positive.");
+            }
+        }
+
+        private static void ThrowIfNegativeOrZeroOrNaN(float value, string paramName)
+        {
+            if (float.IsNaN(value) || value <= 0.0f)
+            {
+                throw new ArgumentOutOfRangeException(paramName, value, "Value must be positive and not NaN.");
+            }
         }
 
         /// <summary>Sets the global time of the simulation.</summary>
