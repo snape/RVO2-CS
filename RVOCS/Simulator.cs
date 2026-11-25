@@ -898,13 +898,16 @@ namespace RVO
 
         /// <summary>Gets or sets the time step of the simulation.</summary>
         ///
-        /// <value>The time step of the simulation. Must be positive.</value>
+        /// <value>The time step of the simulation. Must be finite and positive.</value>
         public float TimeStep
         {
             get => _timeStep;
             set
             {
-                ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(value));
+                if (!float.IsFinite(value) || value <= 0.0f)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value), value, "The time step must be finite and positive.");
+                }
 
                 _timeStep = value;
             }
@@ -1351,7 +1354,7 @@ namespace RVO
         /// <summary>Sets the time step of the simulation.</summary>
         ///
         /// <param name="timeStep">The time step of the simulation. Must be
-        /// positive.</param>
+        /// finite and positive.</param>
         [Obsolete("Use TimeStep instead.", false)]
         public void setTimeStep(float timeStep)
         {
