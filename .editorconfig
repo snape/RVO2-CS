@@ -375,6 +375,9 @@ end_of_line = crlf
 [*.md]
 trim_trailing_whitespace = false
 
+[*.{yaml,yml}]
+max_line_length = 88
+
 [*.sln]
 end_of_line = crlf
 indent_style = tab
