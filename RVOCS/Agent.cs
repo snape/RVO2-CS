@@ -271,7 +271,7 @@ namespace RVO
                 if ((t < 0.0f && tLeft < 0.0f) || (isPointCutOff && tLeft < 0.0f && tRight < 0.0f))
                 {
                     /* Project on left cut-off circle. */
-                    Vector2 unitW = RVOMath.Normalize(_velocity - leftCutOff);
+                    Vector2 unitW = NormalizeCutOffDirection(_velocity - leftCutOff, obstacle1._point);
 
                     line.Direction = new Vector2(unitW.Y, -unitW.X);
                     line.Point = leftCutOff + _radius * invTimeHorizonObst * unitW;
@@ -282,7 +282,7 @@ namespace RVO
                 else if (t > 1.0f && tRight < 0.0f)
                 {
                     /* Project on right cut-off circle. */
-                    Vector2 unitW = RVOMath.Normalize(_velocity - rightCutOff);
+                    Vector2 unitW = NormalizeCutOffDirection(_velocity - rightCutOff, obstacle2._point);
 
                     line.Direction = new Vector2(unitW.Y, -unitW.X);
                     line.Point = rightCutOff + _radius * invTimeHorizonObst * unitW;
@@ -416,6 +416,20 @@ namespace RVO
             {
                 LinearProgram3(_orcaLines, numObstLines, lineFail, _maxSpeed, ref _newVelocity);
             }
+        }
+
+        private Vector2 NormalizeCutOffDirection(Vector2 cutOffOffset, Vector2 obstaclePoint)
+        {
+            Vector2 unitW = RVOMath.Normalize(cutOffOffset);
+
+            if (unitW.X == 0.0f && unitW.Y == 0.0f)
+            {
+                Vector2 away = _position - obstaclePoint;
+                float dist = RVOMath.Abs(away);
+                return dist > 0.0f ? away / dist : new Vector2(1.0f, 0.0f);
+            }
+
+            return unitW;
         }
 
         /// <summary>Inserts an agent neighbor into the set of neighbors of this
