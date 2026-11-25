@@ -1336,12 +1336,17 @@ namespace RVO
         /// <param name="globalTime">The global time of the simulation.</param>
         public void SetGlobalTime(float globalTime)
         {
-            if (!float.IsFinite(globalTime))
-            {
-                throw new ArgumentOutOfRangeException(nameof(globalTime), globalTime, "The global time must be finite.");
-            }
+            ThrowIfNotFinite(globalTime, nameof(globalTime));
 
             _globalTime = globalTime;
+        }
+
+        private static void ThrowIfNotFinite(float value, string paramName)
+        {
+            if (!float.IsFinite(value))
+            {
+                throw new ArgumentOutOfRangeException(paramName, value, "Value must be finite.");
+            }
         }
 
         private static void ThrowIfNegativeOrNotFinite(float value, string paramName)
