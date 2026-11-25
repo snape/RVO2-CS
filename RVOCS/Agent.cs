@@ -271,7 +271,7 @@ namespace RVO
                 if ((t < 0.0f && tLeft < 0.0f) || (isPointCutOff && tLeft < 0.0f && tRight < 0.0f))
                 {
                     /* Project on left cut-off circle. */
-                    Vector2 unitW = NormalizeCutOffDirection(_velocity - leftCutOff, obstacle1._point);
+                    Vector2 unitW = NormalizeCutOffDirection(_velocity - leftCutOff, obstacle1, obstacle2);
 
                     line.Direction = new Vector2(unitW.Y, -unitW.X);
                     line.Point = leftCutOff + _radius * invTimeHorizonObst * unitW;
@@ -282,7 +282,7 @@ namespace RVO
                 else if (t > 1.0f && tRight < 0.0f)
                 {
                     /* Project on right cut-off circle. */
-                    Vector2 unitW = NormalizeCutOffDirection(_velocity - rightCutOff, obstacle2._point);
+                    Vector2 unitW = NormalizeCutOffDirection(_velocity - rightCutOff, obstacle2, obstacle1);
 
                     line.Direction = new Vector2(unitW.Y, -unitW.X);
                     line.Point = rightCutOff + _radius * invTimeHorizonObst * unitW;
@@ -418,13 +418,19 @@ namespace RVO
             }
         }
 
-        private Vector2 NormalizeCutOffDirection(Vector2 cutOffOffset, Vector2 obstaclePoint)
+        private Vector2 NormalizeCutOffDirection(Vector2 cutOffOffset, Obstacle obstacle, Obstacle otherObstacle)
         {
             Vector2 unitW = RVOMath.Normalize(cutOffOffset);
 
             if (unitW.X == 0.0f && unitW.Y == 0.0f)
             {
-                Vector2 away = _position - obstaclePoint;
+                if (obstacle != otherObstacle)
+                {
+                    Vector2 segmentDir = obstacle._next == otherObstacle ? obstacle._direction : otherObstacle._direction;
+                    return new Vector2(segmentDir.Y, -segmentDir.X);
+                }
+
+                Vector2 away = _position - obstacle._point;
                 float dist = RVOMath.Abs(away);
                 return dist > 0.0f ? away / dist : new Vector2(1.0f, 0.0f);
             }
