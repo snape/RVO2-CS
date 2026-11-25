@@ -271,7 +271,7 @@ namespace RVO
                 if ((t < 0.0f && tLeft < 0.0f) || (isPointCutOff && tLeft < 0.0f && tRight < 0.0f))
                 {
                     /* Project on left cut-off circle. */
-                    Vector2 unitW = NormalizeCutOffDirection(_velocity - leftCutOff, obstacle1, obstacle2);
+                    Vector2 unitW = NormalizeCutOffDirection(_velocity - leftCutOff, obstacle1._point, obstacle1._direction, obstacle1 != obstacle2);
 
                     line.Direction = new Vector2(unitW.Y, -unitW.X);
                     line.Point = leftCutOff + _radius * invTimeHorizonObst * unitW;
@@ -282,7 +282,7 @@ namespace RVO
                 else if (t > 1.0f && tRight < 0.0f)
                 {
                     /* Project on right cut-off circle. */
-                    Vector2 unitW = NormalizeCutOffDirection(_velocity - rightCutOff, obstacle2, obstacle1);
+                    Vector2 unitW = NormalizeCutOffDirection(_velocity - rightCutOff, obstacle2._point, obstacle1._direction, obstacle1 != obstacle2);
 
                     line.Direction = new Vector2(unitW.Y, -unitW.X);
                     line.Point = rightCutOff + _radius * invTimeHorizonObst * unitW;
@@ -418,19 +418,18 @@ namespace RVO
             }
         }
 
-        private Vector2 NormalizeCutOffDirection(Vector2 cutOffOffset, Obstacle obstacle, Obstacle otherObstacle)
+        private Vector2 NormalizeCutOffDirection(Vector2 cutOffOffset, Vector2 obstaclePoint, Vector2 segmentDirection, bool hasSegment)
         {
             Vector2 unitW = RVOMath.Normalize(cutOffOffset);
 
             if (unitW.X == 0.0f && unitW.Y == 0.0f)
             {
-                if (obstacle != otherObstacle)
+                if (hasSegment)
                 {
-                    Vector2 segmentDir = obstacle._next == otherObstacle ? obstacle._direction : otherObstacle._direction;
-                    return new Vector2(segmentDir.Y, -segmentDir.X);
+                    return new Vector2(segmentDirection.Y, -segmentDirection.X);
                 }
 
-                Vector2 away = _position - obstacle._point;
+                Vector2 away = _position - obstaclePoint;
                 float dist = RVOMath.Abs(away);
                 return dist > 0.0f ? away / dist : new Vector2(1.0f, 0.0f);
             }
