@@ -52,6 +52,7 @@ namespace RVO
         private float _globalTime;
         private bool _obstaclesProcessed;
 
+        /// <summary>Gets the singleton instance of the simulation.</summary>
         public static Simulator Instance
         {
             get
