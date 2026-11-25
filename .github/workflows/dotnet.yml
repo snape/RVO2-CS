@@ -1,0 +1,465 @@
+#
+# dotnet.yml
+# RVO2 Library C#
+#
+# SPDX-FileCopyrightText: 2008 University of North Carolina at Chapel Hill
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Please send all bug reports to <geom@cs.unc.edu>.
+#
+# The authors may be contacted via:
+#
+# Jur van den Berg, Stephen J. Guy, Jamie Snape, Ming C. Lin, Dinesh Manocha
+# Dept. of Computer Science
+# 201 S. Columbia St.
+# Frederick P. Brooks, Jr. Computer Science Bldg.
+# Chapel Hill, N.C. 27599-3175
+# United States of America
+#
+# <https://gamma.cs.unc.edu/RVO2/>
+#
+
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+---
+name: dotnet
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  release:
+    types:
+      - published
+  schedule:
+    - cron: '10 5 * * *'
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  dotnet-almalinux:
+    name: dotnet almalinux amd64
+    runs-on: ubuntu-latest
+    container: almalinux:10
+    timeout-minutes: 30
+    steps:
+      - name: pre-checkout setup
+        run: |
+          dnf makecache -q --refresh || (sleep 15; dnf makecache -q --refresh)
+          dnf upgrade -q -y
+          dnf install -q -y \
+            ca-certificates \
+            curl-minimal \
+            findutils \
+            gawk \
+            git \
+            glibc-langpack-en \
+            gzip \
+            libicu \
+            lttng-ust \
+            tar \
+            zlib
+          dnf clean all
+          rm -rf /var/cache/yum
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}  # yamllint disable-line rule:line-length
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
+      - name: build package debug
+        run: |
+          dotnet build --configuration Debug --nologo RVOCS.slnx
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+      - name: build package release
+        run: |
+          dotnet build --configuration Release --nologo RVOCS.slnx
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+
+  dotnet-alpine:
+    name: dotnet alpine linux amd64
+    runs-on: ubuntu-latest
+    container: alpine:3
+    timeout-minutes: 30
+    steps:
+      - name: pre-checkout setup
+        run: |
+          apk upgrade -q --no-cache || (sleep 15; apk upgrade -q --no-cache)
+          (apk add -q --no-cache \
+            bash \
+            ca-certificates \
+            curl \
+            gawk \
+            git \
+            gzip \
+            icu \
+            lttng-ust \
+            tar \
+            zlib) || (sleep 15; apk add -q --no-cache \
+            bash \
+            ca-certificates \
+            curl \
+            gawk \
+            git \
+            gzip \
+            icu \
+            lttng-ust \
+            tar \
+            zlib)
+        shell: sh
+      - name: checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}  # yamllint disable-line rule:line-length
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
+      - name: build package debug
+        run: |
+          dotnet build --configuration Debug --nologo RVOCS.slnx
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
+        shell: sh
+      - name: build package release
+        run: |
+          dotnet build --configuration Release --nologo RVOCS.slnx
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
+        shell: sh
+
+  dotnet-arch:
+    name: dotnet arch linux amd64
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    timeout-minutes: 30
+    steps:
+      - name: pre-checkout setup
+        run: |
+          pacman --needed --noconfirm --noprogressbar -S -u -y \
+            ca-certificates \
+            curl \
+            gawk \
+            git \
+            gzip \
+            icu \
+            lttng-ust \
+            tar \
+            zlib
+          rm -rf \
+            /var/cache/pacman/pkg/* \
+            /var/lib/pacman/sync/*
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}  # yamllint disable-line rule:line-length
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
+      - name: build package debug
+        run: |
+          dotnet build --configuration Debug --nologo RVOCS.slnx
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+      - name: build package release
+        run: |
+          dotnet build --configuration Release --nologo RVOCS.slnx
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+
+  dotnet-fedora:
+    name: dotnet fedora linux amd64
+    runs-on: ubuntu-latest
+    container: fedora:44
+    timeout-minutes: 30
+    steps:
+      - name: pre-checkout setup
+        run: |
+          dnf makecache -q --refresh || (sleep 15; dnf makecache -q --refresh)
+          dnf upgrade -q -y
+          dnf install -q -y \
+            ca-certificates \
+            curl \
+            findutils \
+            gawk \
+            git \
+            glibc-langpack-en \
+            gzip \
+            libicu \
+            lttng-ust \
+            tar \
+            zlib
+          dnf clean all
+          rm -rf /var/cache/yum
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}  # yamllint disable-line rule:line-length
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
+      - name: build package debug
+        run: |
+          dotnet build --configuration Debug --nologo RVOCS.slnx
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+      - name: build package release
+        run: |
+          dotnet build --configuration Release --nologo RVOCS.slnx
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+  dotnet-macos:
+    name: dotnet macos arm64
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: setup
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}  # yamllint disable-line rule:line-length
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
+      - name: build package debug
+        run: |
+          dotnet build --configuration Debug --nologo RVOCS.slnx
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
+        shell: zsh -efuo pipefail {0}
+      - name: build and pack release
+        run: |
+          dotnet build --configuration Release --nologo RVOCS.slnx
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
+        shell: zsh -efuo pipefail {0}
+
+  dotnet-ubuntu:
+    name: dotnet ubuntu amd64
+    runs-on: ubuntu-latest
+    container: ubuntu:26.04
+    timeout-minutes: 30
+    steps:
+      - name: pre-checkout setup
+        run: |
+          apt-get -qq -o APT::Acquire::Retries=4 update \
+            || (sleep 15; apt-get -qq -o APT::Acquire::Retries=4 update)
+          apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
+            upgrade
+          apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
+              --no-install-recommends install \
+            ca-certificates \
+            curl \
+            gawk \
+            git \
+            gzip \
+            libicu78 \
+            liblttng-ust1t64 \
+            tar \
+            zlib1g
+          apt-get -qq -o Dpkg::Use-Pty=0 autoremove
+          rm -rf /var/lib/apt/lists/*
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+          source-url: https://nuget.pkg.github.com/snape/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: build package debug
+        run: |
+          dotnet build --configuration Debug --nologo RVOCS.slnx
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+      - name: build package release
+        run: |
+          dotnet build --configuration Release --nologo RVOCS.slnx
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+      - name: push
+        run: |
+          dotnet nuget push --no-symbols true --skip-duplicate \
+            RVOCS/bin/Release/RVOCS.*.nupkg
+        shell: bash
+        if: ${{ github.event.release.published }}
+
+  dotnet-ubuntu-arm64:
+    name: dotnet ubuntu arm64
+    runs-on: ubuntu-26.04-arm
+    container: ubuntu:26.04
+    timeout-minutes: 30
+    steps:
+      - name: pre-checkout setup
+        run: |
+          apt-get -qq -o APT::Acquire::Retries=4 update \
+            || (sleep 15; apt-get -qq -o APT::Acquire::Retries=4 update)
+          apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
+            upgrade
+          apt-get -qq -o APT::Acquire::Retries=4 -o Dpkg::Use-Pty=0 \
+              --no-install-recommends install \
+            ca-certificates \
+            curl \
+            gawk \
+            git \
+            gzip \
+            libicu78 \
+            liblttng-ust1t64 \
+            tar \
+            zlib1g
+          apt-get -qq -o Dpkg::Use-Pty=0 autoremove
+          rm -rf /var/lib/apt/lists/*
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        shell: bash
+      - name: checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: post-checkout setup
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}  # yamllint disable-line rule:line-length
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
+      - name: build package debug
+        run: |
+          dotnet build --configuration Debug --nologo RVOCS.slnx
+          dotnet pack --configuration Debug --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+      - name: build package release
+        run: |
+          dotnet build --configuration Release --nologo RVOCS.slnx
+          dotnet pack --configuration Release --no-build --nologo RVOCS/RVOCS.csproj
+        shell: bash
+
+  dotnet-windows:
+    name: dotnet windows amd64
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: setup
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~\.nuget\packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}  # yamllint disable-line rule:line-length
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
+      - name: build package debug
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          dotnet build --configuration Debug RVOCS.slnx
+          dotnet pack --configuration Debug --no-build RVOCS\RVOCS.csproj
+        shell: pwsh
+      - name: build and pack release
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          dotnet build --configuration Release RVOCS.slnx
+          dotnet pack --configuration Release --no-build RVOCS\RVOCS.csproj
+        shell: pwsh
+
+  dotnet-windows-arm64:
+    name: dotnet windows arm64
+    runs-on: windows-11-arm
+    timeout-minutes: 30
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: setup
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: cache nuget
+        uses: actions/cache@v6
+        with:
+          path: ~\.nuget\packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/*.csproj', 'global.json') }}  # yamllint disable-line rule:line-length
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-nuget-
+      - name: build package debug
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          dotnet build --configuration Debug RVOCS.slnx
+          dotnet pack --configuration Debug --no-build RVOCS\RVOCS.csproj
+        shell: pwsh
+      - name: build and pack release
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          dotnet build --configuration Release RVOCS.slnx
+          dotnet pack --configuration Release --no-build RVOCS\RVOCS.csproj
+        shell: pwsh
