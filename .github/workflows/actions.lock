@@ -16,10 +16,16 @@ workflows:
     '.github/workflows/codeql.yml':
         - 'actions/checkout@v7.0.1'
         - 'github/codeql-action@v4.39.5'
+    '.github/workflows/docker.yml':
+        - 'actions/checkout@v7.0.1'
+        - 'docker/build-push-action@v7.4.0'
+        - 'docker/setup-buildx-action@v4.4.1'
     '.github/workflows/dotnet.yml':
         - 'actions/cache@v6.1.0'
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-dotnet@v6.1.0'
+    '.github/workflows/hadolint.yml':
+        - 'actions/checkout@v7.0.1'
     '.github/workflows/reuse.yml':
         - 'actions/checkout@v7.0.1'
         - 'fsfe/reuse-action@v6.0.0'
@@ -41,6 +47,16 @@ dependencies:
         commit: 'sha1-0f4a354dd5547a28c70b7853dbd95d5b67886e73'
         owner_id: 44036562
         repo_id: 192625306
+    'docker/build-push-action@v7.4.0':
+        ref: 'v7.4.0'
+        commit: 'sha1-c3c9e263c25d99ce0380d002d59b67737d91b0dc'
+        owner_id: 5429470
+        repo_id: 241092383
+    'docker/setup-buildx-action@v4.4.1':
+        ref: 'v4.4.1'
+        commit: 'sha1-f87e5991a6d7451dcb8d9637bfbc97413f497069'
+        owner_id: 5429470
+        repo_id: 288485773
     'fsfe/reuse-action@v6.0.0':
         ref: 'v6.0.0'
         commit: 'sha1-676e2d560c9a403aa252096d99fcab3e1132b0f5'

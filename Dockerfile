@@ -36,7 +36,7 @@
 FROM ubuntu:26.04
 ARG TARGETARCH
 LABEL org.opencontainers.image.authors="Jur van den Berg, Stephen J. Guy, Jamie Snape, Ming C. Lin, Dinesh Manocha"
-LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:latest"
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:26.04"
 LABEL org.opencontainers.image.description="Optimal Reciprocal Collision Avoidance for C#"
 LABEL org.opencontainers.image.licenses="Apache-2.0"
 LABEL org.opencontainers.image.source="https://github.com/snape/RVO2/"
@@ -47,63 +47,81 @@ LABEL org.opencontainers.image.version="2.1.0"
 ENV LANG=C.UTF-8
 ENV LOGNAME=root
 ENV USER=root
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# hadolint ignore=DL3008,DL3013
 RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get update -qq \
   && apt-get install --no-install-recommends -o Dpkg::Use-Pty=0 -qy \
     ca-certificates \
     cmake \
     cmake-format \
+    codespell \
+    curl \
     dirmngr \
-    dotnet-sdk-8.0 \
+    dotnet-sdk-10.0 \
     doxygen \
     dpkg-dev \
     file \
     git \
+    gnupg \
     graphviz \
     jsonlint \
-    libicu74 \
+    libicu78 \
     make \
     markdownlint \
-    mono-complete \
     nano \
     netbase \
     ninja-build \
     openssh-client \
+    pipx \
     python3 \
     python3-click \
     python3-dateutil \
     python3-docopt \
     python3-jsonschema \
+    python3-pathspec \
     python3-pip \
+    python3-pygments \
     python3-pykwalify \
     python3-requests \
     python3-ruamel.yaml \
     python3-venv \
     reuse \
+    shellcheck \
     sudo \
     yamllint \
     zlib1g \
   && rm -rf /var/lib/apt/lists/* \
-  && wget -q https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-${TARGETARCH:-amd64}.deb \
+  && curl -fsSLO \
+    https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-${TARGETARCH:-amd64}.deb \
   && dpkg -i bazelisk-${TARGETARCH:-amd64}.deb \
   && rm -rf bazelisk-${TARGETARCH:-amd64}.deb \
-  && wget -qO /usr/local/bin/buildifier \
+  && curl -fsSL \
     https://github.com/bazelbuild/buildtools/releases/latest/download/buildifier-linux-${TARGETARCH:-amd64} \
-  && wget -qO /usr/local/bin/buildozer \
+    -o /usr/local/bin/buildifier \
+  && curl -fsSL \
     https://github.com/bazelbuild/buildtools/releases/latest/download/buildozer-linux-${TARGETARCH:-amd64} \
+    -o /usr/local/bin/buildozer \
+  && curl -fsSL \
+    "https://github.com/hadolint/hadolint/releases/latest/download/hadolint-linux-$([ "${TARGETARCH:-amd64}" = "arm64" ] && echo arm64 || echo x86_64)" \
+    -o /usr/local/bin/hadolint \
   && chmod +x \
     /usr/local/bin/buildifier \
     /usr/local/bin/buildozer \
-  && python3 -m venv --system-site-packages /home/ubuntu/.venv \
-  && . /home/ubuntu/.venv/bin/activate \
-  && pip install --no-cache-dir -qq \
+    /usr/local/bin/hadolint \
+  && curl -fsSL \
+    https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash \
+    | bash -s -- '' /usr/local/bin \
+  && pipx install --global \
     cffconvert \
+    check-jsonschema \
+    lizard \
+    pre-commit \
   && echo "ubuntu ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/ubuntu \
   && chmod 0440 /etc/sudoers.d/ubuntu
 ENV LOGNAME=ubuntu
-ENV PATH="/home/ubuntu/.venv/bin:${PATH}"
 ENV SHELL=/bin/bash
 ENV USER=ubuntu
-ENV VIRTUAL_ENV=/home/ubuntu/.venv
+# hadolint ignore=DL3066
 USER ubuntu
 WORKDIR /workspace
