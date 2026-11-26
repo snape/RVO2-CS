@@ -13,9 +13,15 @@ workflows:
         - 'actions/setup-dotnet@v6.1.0'
     '.github/workflows/buildifier.yml':
         - 'actions/checkout@v7.0.1'
+    '.github/workflows/check-jsonschema.yml':
+        - 'actions/checkout@v7.0.1'
+        - 'astral-sh/setup-uv@v10.4.0'
     '.github/workflows/codeql.yml':
         - 'actions/checkout@v7.0.1'
         - 'github/codeql-action@v4.39.5'
+    '.github/workflows/codespell.yml':
+        - 'actions/checkout@v7.0.1'
+        - 'astral-sh/setup-uv@v10.4.0'
     '.github/workflows/docker.yml':
         - 'actions/checkout@v7.0.1'
         - 'docker/build-push-action@v7.4.0'
@@ -26,9 +32,14 @@ workflows:
         - 'actions/setup-dotnet@v6.1.0'
     '.github/workflows/hadolint.yml':
         - 'actions/checkout@v7.0.1'
+    '.github/workflows/markdownlint.yml':
+        - 'actions/checkout@v7.0.1'
     '.github/workflows/reuse.yml':
         - 'actions/checkout@v7.0.1'
         - 'fsfe/reuse-action@v6.0.0'
+    '.github/workflows/validate-cff.yml':
+        - 'actions/checkout@v7.0.1'
+        - 'astral-sh/setup-uv@v10.4.0'
     '.github/workflows/yamllint.yml':
         - 'actions/checkout@v7.0.1'
 dependencies:
@@ -47,6 +58,11 @@ dependencies:
         commit: 'sha1-0f4a354dd5547a28c70b7853dbd95d5b67886e73'
         owner_id: 44036562
         repo_id: 192625306
+    'astral-sh/setup-uv@v10.4.0':
+        ref: 'v10.4.0'
+        commit: 'sha1-1db35dd8eee11c5894872e0b383ae6c406cf738d'
+        owner_id: 115962839
+        repo_id: 846733598
     'docker/build-push-action@v7.4.0':
         ref: 'v7.4.0'
         commit: 'sha1-c3c9e263c25d99ce0380d002d59b67737d91b0dc'
