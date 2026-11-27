@@ -50,7 +50,7 @@ namespace RVO
         /// <returns>The length of the two-dimensional vector.</returns>
         public static float Abs(Vector2 vector)
         {
-            return MathF.Sqrt(AbsSq(vector));
+            return (float)LengthDouble(vector);
         }
 
         /// <summary>Computes the squared length of a specified two-dimensional
@@ -74,14 +74,21 @@ namespace RVO
         /// is to be computed.</param>
         public static Vector2 Normalize(Vector2 vector)
         {
-            float length = Abs(vector);
+            double length = LengthDouble(vector);
 
             if (length <= RVO_EPSILON)
             {
                 return new Vector2(0.0f, 0.0f);
             }
 
-            return vector / length;
+            return new Vector2((float)(vector.X / length), (float)(vector.Y / length));
+        }
+
+        private static double LengthDouble(Vector2 vector)
+        {
+            double x = vector.X;
+            double y = vector.Y;
+            return Math.Sqrt(x * x + y * y);
         }
 
         /// <summary>Computes the determinant of a two-dimensional square matrix
