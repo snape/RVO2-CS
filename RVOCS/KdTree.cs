@@ -33,6 +33,7 @@
 
 using System;
 using System.Collections.Generic;
+using BigInteger = System.Numerics.BigInteger;
 
 namespace RVO
 {
@@ -559,32 +560,73 @@ namespace RVO
             Obstacle obstacle1 = node._obstacle;
             Obstacle obstacle2 = obstacle1._next;
 
-            float q1LeftOfI = RVOMath.LeftOf(obstacle1._point, obstacle2._point, q1);
-            float q2LeftOfI = RVOMath.LeftOf(obstacle1._point, obstacle2._point, q2);
-            float invLengthI = 1.0f / RVOMath.AbsSq(obstacle2._point - obstacle1._point);
-            float radiusSq = radius * radius;
+            double q1LeftOfI = VisibilitySide(obstacle1._point, obstacle2._point, q1);
+            double q2LeftOfI = VisibilitySide(obstacle1._point, obstacle2._point, q2);
+            double invLengthI = 1.0 / VisibilityLengthSq(obstacle1._point, obstacle2._point);
+            double radiusSq = (double)radius * radius;
 
-            if (q1LeftOfI >= 0.0f && q2LeftOfI >= 0.0f)
+            if (q1LeftOfI >= 0.0 && q2LeftOfI >= 0.0)
             {
                 return QueryVisibilityRecursive(q1, q2, radius, node._left) && ((q1LeftOfI * q1LeftOfI * invLengthI >= radiusSq && q2LeftOfI * q2LeftOfI * invLengthI >= radiusSq) || QueryVisibilityRecursive(q1, q2, radius, node._right));
             }
 
-            if (q1LeftOfI <= 0.0f && q2LeftOfI <= 0.0f)
+            if (q1LeftOfI <= 0.0 && q2LeftOfI <= 0.0)
             {
                 return QueryVisibilityRecursive(q1, q2, radius, node._right) && ((q1LeftOfI * q1LeftOfI * invLengthI >= radiusSq && q2LeftOfI * q2LeftOfI * invLengthI >= radiusSq) || QueryVisibilityRecursive(q1, q2, radius, node._left));
             }
 
-            if (q1LeftOfI >= 0.0f && q2LeftOfI <= 0.0f)
+            if (q1LeftOfI >= 0.0 && q2LeftOfI <= 0.0)
             {
                 /* One can see through obstacle from left to right. */
                 return QueryVisibilityRecursive(q1, q2, radius, node._left) && QueryVisibilityRecursive(q1, q2, radius, node._right);
             }
 
-            float point1LeftOfQ = RVOMath.LeftOf(q1, q2, obstacle1._point);
-            float point2LeftOfQ = RVOMath.LeftOf(q1, q2, obstacle2._point);
-            float invLengthQ = 1.0f / RVOMath.AbsSq(q2 - q1);
+            double point1LeftOfQ = VisibilitySide(q1, q2, obstacle1._point);
+            double point2LeftOfQ = VisibilitySide(q1, q2, obstacle2._point);
+            double invLengthQ = 1.0 / VisibilityLengthSq(q1, q2);
 
-            return point1LeftOfQ * point2LeftOfQ >= 0.0f && point1LeftOfQ * point1LeftOfQ * invLengthQ > radiusSq && point2LeftOfQ * point2LeftOfQ * invLengthQ > radiusSq && QueryVisibilityRecursive(q1, q2, radius, node._left) && QueryVisibilityRecursive(q1, q2, radius, node._right);
+            return point1LeftOfQ * point2LeftOfQ >= 0.0 && point1LeftOfQ * point1LeftOfQ * invLengthQ > radiusSq && point2LeftOfQ * point2LeftOfQ * invLengthQ > radiusSq && QueryVisibilityRecursive(q1, q2, radius, node._left) && QueryVisibilityRecursive(q1, q2, radius, node._right);
+        }
+
+        private static double VisibilitySide(Vector2 a, Vector2 b, Vector2 point)
+        {
+            double x = (double)b.X - a.X;
+            double y = (double)b.Y - a.Y;
+            double left = x * ((double)point.Y - a.Y);
+            double right = y * ((double)point.X - a.X);
+            double side = left - right;
+
+            // Eight times the double unit roundoff bounds the combined error
+            // from the coordinate differences, products, and subtraction.
+            const double errorBound = 8.881784197001252e-16;
+            // Nonzero products of float differences cannot underflow in double.
+            if (!double.IsFinite(side) || (left == 0.0 && right == 0.0) ||
+                Math.Abs(side) > errorBound * (Math.Abs(left) + Math.Abs(right)))
+            {
+                return side;
+            }
+
+            // Every finite float is an integer multiple of 2^-149. Compute
+            // the determinant in those units, then restore its area scale.
+            const int coordinateShift = 149;
+            BigInteger ax = ScaleCoordinate(a.X);
+            BigInteger ay = ScaleCoordinate(a.Y);
+            BigInteger exactX = ScaleCoordinate(b.X) - ax;
+            BigInteger exactY = ScaleCoordinate(b.Y) - ay;
+            BigInteger exactSide = exactX * (ScaleCoordinate(point.Y) - ay) - exactY * (ScaleCoordinate(point.X) - ax);
+            return Math.ScaleB((double)exactSide, -2 * coordinateShift);
+
+            static BigInteger ScaleCoordinate(float value)
+            {
+                return new BigInteger(Math.ScaleB(value, coordinateShift));
+            }
+        }
+
+        private static double VisibilityLengthSq(Vector2 a, Vector2 b)
+        {
+            double x = (double)b.X - a.X;
+            double y = (double)b.Y - a.Y;
+            return x * x + y * y;
         }
     }
 }
