@@ -398,7 +398,24 @@ namespace RVO
                     Vector2 w = relativeVelocity - invTimeStep * relativePosition;
 
                     float wLength = RVOMath.Abs(w);
-                    Vector2 unitW = w / wLength;
+                    Vector2 unitW;
+
+                    if (wLength == 0.0f)
+                    {
+                        if (combinedRadius == 0.0f)
+                        {
+                            continue;
+                        }
+
+                        /* At the cut-off center, use opposing directions. */
+                        unitW = distSq > 0.0f
+                            ? -relativePosition / MathF.Sqrt(distSq)
+                            : new Vector2(_id < other._id ? -1.0f : 1.0f, 0.0f);
+                    }
+                    else
+                    {
+                        unitW = w / wLength;
+                    }
 
                     line.Direction = new Vector2(unitW.Y, -unitW.X);
                     u = (combinedRadius * invTimeStep - wLength) * unitW;
